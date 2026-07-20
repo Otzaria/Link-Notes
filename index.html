@@ -391,6 +391,18 @@
     .warn .dot{background:var(--warn)}
     .err .dot{background:var(--err)}
 
+    /* מחוון "עובד" - ספינר קטן שמחליף את הנקודה, כדי שיהיה ברור שהכלי פעיל
+       ולא תקוע, גם בפעולות שלוקחות כמה שניות על קבצים גדולים */
+    .busy .dot{
+      background:transparent;
+      border:2px solid var(--line);
+      border-top-color:var(--accent);
+      animation:busySpin .7s linear infinite;
+    }
+    @keyframes busySpin{
+      to{transform:rotate(360deg)}
+    }
+
     .statusWrap{
       display:flex;
       align-items:center;
@@ -706,6 +718,29 @@
     }
 
     .editorEmpty{padding:14px;color:var(--muted);text-align:center;font-size:12.5px}
+
+    /* שורת "טען עוד / טען הכל" בתחתית טור מקוצר (pagination) - ראו EDITOR_PAGE_SIZE */
+    .editorLoadMore{
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      gap:6px;
+      padding:12px 8px;
+      border-top:1px dashed var(--line);
+      background:var(--panelBg);
+    }
+
+    .editorLoadMoreHint{
+      font-size:11px;
+      color:var(--muted);
+      text-align:center;
+    }
+
+    .editorLoadMore button{
+      font-size:12px;
+      padding:6px 12px;
+      border-radius:8px;
+    }
 
     .lnRow{
       display:flex;
@@ -1314,6 +1349,15 @@
     if (spanText) spanText.textContent = text;
   }
 
+  /* מחזיר שליטה לדפדפן לרגע (שתי מסגרות ציור) לפני עבודה סינכרונית כבדה,
+     כדי שמצב "עובד..." (ספינר/טקסט) שהוצג רגע קודם יספיק להצטייר על המסך
+     במקום שהתהליך הכבד "יחטוף" את ה-thread לפני שהמשתמש רואה משהו */
+  function yieldToBrowser() {
+    return new Promise(resolve => {
+      requestAnimationFrame(() => requestAnimationFrame(resolve));
+    });
+  }
+
   let toastTimer = null;
   function showToast(msg) {
     els.toast.textContent = msg;
@@ -1326,6 +1370,27 @@
     const ready = state.bookText.trim().length > 0 && state.notesText.trim().length > 0;
     els.btnMake.disabled = !ready;
     els.btnAdvancedEditor.disabled = !ready;
+    updateMakeStatusForFiles();
+  }
+
+  /*
+    מעדכן את הודעת הסטטוס מתחת לכפתור "יצירת ה-JSON" בהתאם למצב טעינת הקבצים
+    בפועל - כדי שלא תישאר תקועה על "טען קבצים כדי להתחיל" גם אחרי שהקבצים
+    כבר נטענו. לא דורס הודעת הצלחה/אזהרה/שגיאה שכבר מוצגת אחרי ריצה בפועל.
+  */
+  function updateMakeStatusForFiles() {
+    if (state.editor) return; // כבר רצה יצירת JSON - משאירים את סיכום התוצאה על המסך
+
+    const hasBook = state.bookText.trim().length > 0;
+    const hasNotes = state.notesText.trim().length > 0;
+
+    if (hasBook && hasNotes) {
+      setStatus(els.makeStatus, 'שני הקבצים נטענו - לחצו על "⚙️ יצירת ה-JSON" כדי להתחיל', "ok");
+    } else if (hasBook || hasNotes) {
+      setStatus(els.makeStatus, `נטען קובץ אחד בלבד - טענו גם את ${hasBook ? "קובץ ההערות" : "קובץ הספר"}`, "");
+    } else {
+      setStatus(els.makeStatus, "טען קבצים כדי להתחיל", "");
+    }
   }
 
   function getLinkGenerationMode() {
@@ -2305,14 +2370,10 @@
     updateButtons();
   }
 
-  function makeJson() {
-    if (state.editor && state.editor.dirty) {
-      const proceed = confirm(
-        "יצירת ה-JSON מחדש תמחק את השינויים הידניים שביצעת בעורך המתקדם. להמשיך?"
-      );
-      if (!proceed) return;
-    }
-
+  /* הליבה הסינכרונית של זיהוי וקישור (ראו makeJson למטה לעטיפה עם מחוון "עובד").
+     מופרד מ-makeJson כדי שבדיקת ה-confirm על מחיקת שינויים ידניים תתבצע *לפני*
+     שמוצג מצב "עובד" - אחרת ביטול ה-confirm היה משאיר את הסטטוס תקוע על "מעבד..." */
+  function makeJsonCore() {
     els.btnDownload.disabled = true;
     els.btnCopy.disabled = true;
 
@@ -2479,7 +2540,11 @@
       flashToken: 0,
       /* קישורים שבהם המשתמש חשף ידנית שדות טווח (עד) ו/או עוגן-מילה (start/end), לצד המצב הנוכחי בפועל */
       expandedRangeIds: new Set(),
-      expandedAnchorIds: new Set()
+      expandedAnchorIds: new Set(),
+      /* טעינה מדורגת (pagination) לכל טור - ראו EDITOR_PAGE_SIZE, חיוני בקבצים גדולים */
+      bookVisible: EDITOR_PAGE_SIZE,
+      notesVisible: EDITOR_PAGE_SIZE,
+      linksVisible: EDITOR_PAGE_SIZE
     };
 
     if (els.advEditor.style.display !== "none") {
@@ -2507,6 +2572,34 @@
     els.btnCopy.disabled = (outArr.length === 0);
 
     showToast(outArr.length ? "ה-JSON נוצר" : "לא נוצרו קישורים");
+  }
+
+  /*
+    עטיפה של makeJsonCore עם מחוון "עובד" גלוי: משנה את טקסט הכפתור והסטטוס,
+    ונותנת לדפדפן הזדמנות לצייר את זה (yieldToBrowser) *לפני* שמתחיל העיבוד
+    הסינכרוני הכבד - כדי שבקבצים גדולים לא ייראה כאילו הכלי "נתקע" בלי תגובה.
+  */
+  async function makeJson() {
+    if (state.editor && state.editor.dirty) {
+      const proceed = confirm(
+        "יצירת ה-JSON מחדש תמחק את השינויים הידניים שביצעת בעורך המתקדם. להמשיך?"
+      );
+      if (!proceed) return;
+    }
+
+    const originalLabel = els.btnMake.textContent;
+    els.btnMake.disabled = true;
+    els.btnMake.textContent = "⏳ מעבד...";
+    setStatus(els.makeStatus, "⏳ מעבד ומקשר... (בקבצים גדולים זה עשוי לקחת כמה שניות)", "busy");
+
+    await yieldToBrowser();
+
+    try {
+      makeJsonCore();
+    } finally {
+      els.btnMake.textContent = originalLabel;
+      updateButtons();
+    }
   }
 
   /*
@@ -2556,6 +2649,39 @@
     return map;
   }
 
+  /*
+    ------------------------------------------------------------------------
+    טעינה מדורגת (pagination) בעורך המתקדם.
+    בספר גדול מאוד (עשרות אלפי שורות/הערות), בניית ה-HTML וקישור מאזין
+    (event listener) לכל שורה בבת אחת עלולים "לתקוע" את הדפדפן לזמן ארוך,
+    ולתת רושם שהעורך "לא נפתח" בכלל. לכן כל טור מציג כברירת מחדל רק חלון
+    ראשוני (EDITOR_PAGE_SIZE שורות/קישורים), עם כפתור "טען עוד" ו"טען הכל"
+    להרחבה מודעת. הגלילה/ההדגשה האוטומטית (flashRelated) מרחיבה את החלון
+    אוטומטית אם היעד חורג ממנו, כדי שהתכונה תמשיך לעבוד נכון גם בקבצים גדולים.
+    ------------------------------------------------------------------------
+  */
+  const EDITOR_PAGE_SIZE = 500;
+
+  /* מרחיב חלון תצוגה קיים כך שיכלול אינדקס יעד (1-based), בקפיצות של
+     EDITOR_PAGE_SIZE - עקבי עם מה שכפתור "טען עוד" היה עושה בעצמו */
+  function expandVisibleToInclude(currentVisible, total, targetIndexOneBased) {
+    if (!Number.isInteger(targetIndexOneBased) || targetIndexOneBased <= currentVisible) return currentVisible;
+    let visible = currentVisible || EDITOR_PAGE_SIZE;
+    while (visible < targetIndexOneBased && visible < total) visible += EDITOR_PAGE_SIZE;
+    return Math.min(visible, total);
+  }
+
+  /* בונה את שורת "טען עוד / טען הכל" שמופיעה בתחתית טור מקוצר */
+  function loadMoreRowHtml(remaining, className) {
+    if (remaining <= 0) return "";
+    const nextChunk = Math.min(EDITOR_PAGE_SIZE, remaining);
+    return `<div class="editorLoadMore">
+      <span class="editorLoadMoreHint">מוצגות רק השורות הראשונות מטעמי ביצועים בקבצים גדולים</span>
+      <button type="button" class="${className}Btn" title="טעינת ${nextChunk} שורות נוספות">⬇️ טען עוד ${nextChunk} (נותרו ${remaining})</button>
+      <button type="button" class="${className}All" title="טעינת כל השורות הנותרות בבת אחת - עלול להאט בקבצים ענקיים">טען הכל</button>
+    </div>`;
+  }
+
   function renderEditor() {
     if (!state.editor) return;
     renderEditorBookCol();
@@ -2576,7 +2702,11 @@
       tagRangesByLine.get(occ.lineIndex).push({ start: occ.rawStart, end: occ.rawEnd });
     }
 
-    const html = bookLines.map((text, idx) => {
+    /* חלון טעינה מדורגת - ראו הסבר ליד EDITOR_PAGE_SIZE למעלה */
+    const total = bookLines.length;
+    const visible = Math.min(state.editor.bookVisible || EDITOR_PAGE_SIZE, total);
+
+    const html = bookLines.slice(0, visible).map((text, idx) => {
       const lineIndex = idx + 1;
       const baseStatus = statuses.get(lineIndex);
       let statusClass = baseStatus ? `status-${baseStatus}` : "";
@@ -2591,10 +2721,24 @@
         `</div>`;
     }).join("");
 
-    els.editorBookCol.innerHTML = html || `<div class="editorEmpty">אין שורות בספר</div>`;
+    els.editorBookCol.innerHTML =
+      (html || `<div class="editorEmpty">אין שורות בספר</div>`) +
+      loadMoreRowHtml(total - visible, "loadMoreBook");
 
     els.editorBookCol.querySelectorAll(".lnRow").forEach(row => {
       row.addEventListener("click", () => handleBookLineClick(parseInt(row.dataset.line, 10)));
+    });
+
+    const moreBtn = els.editorBookCol.querySelector(".loadMoreBookBtn");
+    if (moreBtn) moreBtn.addEventListener("click", () => {
+      state.editor.bookVisible = Math.min(total, visible + EDITOR_PAGE_SIZE);
+      renderEditorBookCol();
+    });
+    const allBtn = els.editorBookCol.querySelector(".loadMoreBookAll");
+    if (allBtn) allBtn.addEventListener("click", () => {
+      if (total > 3000 && !confirm(`טעינת כל ${total} השורות בבת אחת עלולה להאט את הדפדפן. להמשיך?`)) return;
+      state.editor.bookVisible = total;
+      renderEditorBookCol();
     });
   }
 
@@ -2603,7 +2747,10 @@
     const { noteLines, pendingNotesLine, activeLinkId, linksArr, flashNotesLines } = state.editor;
     const activeLink = activeLinkId ? linksArr.find(l => l._id === activeLinkId) : null;
 
-    const html = noteLines.map((text, idx) => {
+    const total = noteLines.length;
+    const visible = Math.min(state.editor.notesVisible || EDITOR_PAGE_SIZE, total);
+
+    const html = noteLines.slice(0, visible).map((text, idx) => {
       const lineIndex = idx + 1;
       const baseStatus = statuses.get(lineIndex);
       const cssStatus = baseStatus === "used" ? "linked" : baseStatus;
@@ -2619,10 +2766,24 @@
         `</div>`;
     }).join("");
 
-    els.editorNotesCol.innerHTML = html || `<div class="editorEmpty">אין שורות בהערות</div>`;
+    els.editorNotesCol.innerHTML =
+      (html || `<div class="editorEmpty">אין שורות בהערות</div>`) +
+      loadMoreRowHtml(total - visible, "loadMoreNotes");
 
     els.editorNotesCol.querySelectorAll(".lnRow").forEach(row => {
       row.addEventListener("click", () => handleNotesLineClick(parseInt(row.dataset.line, 10)));
+    });
+
+    const moreBtn = els.editorNotesCol.querySelector(".loadMoreNotesBtn");
+    if (moreBtn) moreBtn.addEventListener("click", () => {
+      state.editor.notesVisible = Math.min(total, visible + EDITOR_PAGE_SIZE);
+      renderEditorNotesCol();
+    });
+    const allBtn = els.editorNotesCol.querySelector(".loadMoreNotesAll");
+    if (allBtn) allBtn.addEventListener("click", () => {
+      if (total > 3000 && !confirm(`טעינת כל ${total} השורות בבת אחת עלולה להאט את הדפדפן. להמשיך?`)) return;
+      state.editor.notesVisible = total;
+      renderEditorNotesCol();
     });
   }
 
@@ -2636,7 +2797,10 @@
       return;
     }
 
-    const html = linksArr.map((link, idx) => {
+    const total = linksArr.length;
+    const visible = Math.min(state.editor.linksVisible || EDITOR_PAGE_SIZE, total);
+
+    const html = linksArr.slice(0, visible).map((link, idx) => {
       const isActive = link._id === activeLinkId;
       const isFlash = !!(flashLinkIds && flashLinkIds.has(link._id));
       const hasAnchor = Number.isInteger(link.start) || Number.isInteger(link.end);
@@ -2691,7 +2855,19 @@
         </div>`;
     }).join("");
 
-    els.editorLinksCol.innerHTML = html;
+    els.editorLinksCol.innerHTML = html + loadMoreRowHtml(total - visible, "loadMoreLinks");
+
+    const moreLinksBtn = els.editorLinksCol.querySelector(".loadMoreLinksBtn");
+    if (moreLinksBtn) moreLinksBtn.addEventListener("click", () => {
+      state.editor.linksVisible = Math.min(total, visible + EDITOR_PAGE_SIZE);
+      renderEditorLinksCol();
+    });
+    const allLinksBtn = els.editorLinksCol.querySelector(".loadMoreLinksAll");
+    if (allLinksBtn) allLinksBtn.addEventListener("click", () => {
+      if (total > 3000 && !confirm(`טעינת כל ${total} הקישורים בבת אחת עלולה להאט את הדפדפן. להמשיך?`)) return;
+      state.editor.linksVisible = total;
+      renderEditorLinksCol();
+    });
 
     els.editorLinksCol.querySelectorAll(".liType").forEach(sel => {
       const id = parseInt(sel.dataset.id, 10);
@@ -2829,6 +3005,25 @@
     state.editor.flashBookLines = flashBookLines;
     state.editor.flashNotesLines = flashNotesLines;
     state.editor.flashLinkIds = flashLinkIds;
+
+    /* בקבצים גדולים הטורים טעונים בהדרגה (pagination) - אם היעד שצריך להדגיש
+       נמצא מעבר לחלון הטעון כרגע, מרחיבים את החלון כדי שההדגשה/הגלילה
+       האוטומטית ימשיכו לעבוד נכון גם כשלא כל הקובץ טעון על המסך */
+    if (flashBookLines.size) {
+      const maxLine = Math.max(...flashBookLines);
+      state.editor.bookVisible = expandVisibleToInclude(state.editor.bookVisible, state.editor.bookLines.length, maxLine);
+    }
+    if (flashNotesLines.size) {
+      const maxLine = Math.max(...flashNotesLines);
+      state.editor.notesVisible = expandVisibleToInclude(state.editor.notesVisible, state.editor.noteLines.length, maxLine);
+    }
+    if (flashLinkIds.size) {
+      let maxIdx = -1;
+      state.editor.linksArr.forEach((l, idx) => { if (flashLinkIds.has(l._id) && idx > maxIdx) maxIdx = idx; });
+      if (maxIdx >= 0) {
+        state.editor.linksVisible = expandVisibleToInclude(state.editor.linksVisible, state.editor.linksArr.length, maxIdx + 1);
+      }
+    }
 
     const token = ++state.editor.flashToken;
     renderEditor();
@@ -3019,13 +3214,22 @@
     renderEditor();
   }
 
+  /* פלייסהולדר זמני בשלושת הטורים לפני רינדור כבד, כדי שהמשתמש יראה מיד
+     שמשהו קורה במקום מסך ריק/קפוא (במיוחד חשוב בספרים גדולים) */
+  function showEditorLoadingPlaceholders() {
+    const placeholder = `<div class="editorEmpty">⏳ טוען עורך מתקדם...</div>`;
+    if (els.editorBookCol) els.editorBookCol.innerHTML = placeholder;
+    if (els.editorNotesCol) els.editorNotesCol.innerHTML = placeholder;
+    if (els.editorLinksCol) els.editorLinksCol.innerHTML = placeholder;
+  }
+
   function setEditorVisible(show) {
     els.advEditor.style.display = show ? "" : "none";
     els.btnAdvancedEditor.textContent = show ? "🧩 סגירת עורך מתקדם" : "🧩 עורך מתקדם";
     if (show) renderEditor();
   }
 
-  function toggleAdvancedEditor() {
+  async function toggleAdvancedEditor() {
     const isOpen = els.advEditor.style.display !== "none";
 
     if (isOpen) {
@@ -3034,11 +3238,25 @@
     }
 
     if (!state.editor) {
-      makeJson();
+      await makeJson();
       if (!state.editor) return; // המשתמש ביטל את יצירת ה-JSON באישור
     }
 
-    setEditorVisible(true);
+    els.btnAdvancedEditor.disabled = true;
+    const originalLabel = els.btnAdvancedEditor.textContent;
+    els.btnAdvancedEditor.textContent = "⏳ טוען...";
+    showEditorLoadingPlaceholders();
+
+    /* בספר גדול מאוד, רינדור כל שלושת הטורים (גם המקוצרים לעמוד ראשון) עדיין
+       דורש עבודה סינכרונית לא-זניחה - נותנים לדפדפן לצייר את הפלייסהולדר קודם */
+    await yieldToBrowser();
+
+    try {
+      setEditorVisible(true);
+    } finally {
+      if (els.advEditor.style.display === "none") els.btnAdvancedEditor.textContent = originalLabel;
+      updateButtons();
+    }
   }
 
   function downloadJson() {
@@ -3134,6 +3352,14 @@
       toast.className = "toast";
     }
 
+    /* אין טעם בכפתור "הורדת הקובץ לעבודה אופליין" (וההערה הנלווית) בתוך קובץ
+       שכבר הורד ונפתח אופליין - מסירים אותם לגמרי מהעותק (לא רק מסתירים) */
+    const footerActions = clone.querySelector(".footerActions");
+    if (footerActions) footerActions.remove();
+
+    const footerNote = clone.querySelector(".footerNote");
+    if (footerNote) footerNote.remove();
+
     return "<!doctype html>\n" + clone.outerHTML;
   }
 
@@ -3180,7 +3406,10 @@
     els.btnMake.addEventListener("click", makeJson);
     els.btnDownload.addEventListener("click", downloadJson);
     els.btnCopy.addEventListener("click", copyJson);
-    els.btnOffline.addEventListener("click", downloadOfflineCopy);
+    /* בעותק האופליין המורד (ראו buildOfflineHtml) האלמנטים הבאים מוסרים מה-DOM
+       לגמרי כי אין בהם טעם בקובץ שכבר עובד אופליין - הבדיקה כאן מונעת שגיאת
+       "cannot read property of null" שהייתה עוצרת את כל תהליך האתחול באמצע */
+    if (els.btnOffline) els.btnOffline.addEventListener("click", downloadOfflineCopy);
     els.btnAdvancedEditor.addEventListener("click", toggleAdvancedEditor);
     els.btnCloseEditor.addEventListener("click", () => setEditorVisible(false));
     els.btnAddLink.addEventListener("click", addBlankLink);
