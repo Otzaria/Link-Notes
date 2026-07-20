@@ -5,7 +5,14 @@
 [כניסה לאתר](https://otzaria.github.io/Link-Notes/)
 
 
-<img width="797" height="720" alt="image" src="https://github.com/user-attachments/assets/5fd11a23-fc7b-456c-aa03-063ef0bba5d6" />
+<img width="888" height="309" alt="image" src="https://github.com/user-attachments/assets/68256cf4-5d38-4d88-a96c-28502fe16016" />
+
+<img width="885" height="605" alt="image" src="https://github.com/user-attachments/assets/003f2021-904b-4aa1-b932-12331bf1791b" />
+
+<img width="892" height="577" alt="image" src="https://github.com/user-attachments/assets/7cf0207b-361b-473c-8a51-0759ede6f07c" />
+
+<img width="896" height="483" alt="image" src="https://github.com/user-attachments/assets/9354788d-2d0f-41c8-949e-3f87a52b49cd" />
+
 
 ## איך זה עובד
 
