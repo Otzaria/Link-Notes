@@ -1642,7 +1642,14 @@
 
     if (!Number.isFinite(num)) return null;
 
-    const key = `${prefix}${num}${suffix}`;
+    /* המפתח נושא את המספר ואת הכוכביות בלבד. הכוכבית היא חלק מזהות הסימון
+       ("סג*" ≠ "סג") ולכן חייבת להישמר, אבל כל שאר הפיסוק הוא עיטור שכל צד
+       עשוי לכתוב אחרת: הספר מסמן <sup>1</sup> ואילו קובץ ההערות פותח את אותה
+       הערה עצמה ב-"1)" או ב-"1.". מפתח שנושא את העיטור לא היה מתאים בין שני
+       הצדדים, והקובץ כולו היה יוצא בלי אף קישור. prefix/suffix הגולמיים
+       נשמרים כמות שהם עבור דוח הכפילויות. */
+    const stars = s => "*".repeat((String(s).match(/\*/g) || []).length);
+    const key = `${stars(prefix)}${num}${stars(suffix)}`;
     const hasDecoration = (prefix + suffix).length > 0;
 
     return {
@@ -1655,15 +1662,10 @@
     };
   }
 
-  /* מפתח "מספרי פשוט" = ספרות עשרוניות, אולי בעיטור פיסוק שנשאר צמוד למספר
-     ("1.", "1)"). מאז המעבר לכמתים חמדניים ב-extractRefsFromLineByTag פיסוק
-     נגרר בלי פותח תואם שורד את stripWrapperChars ונשאר במפתח, ולכן בדיקת
-     /^\d+$/ בלבד הייתה מכבה את זיהוי איפוס-המספור בין פרקים בספרים שמסמנים
-     "1." או "1)". כוכבית פוסלת: היא חלק מהמזהה ("63*" ≠ "63"). */
+  /* מפתח "מספרי פשוט" = מספר בלי כוכבית. normalizeRefToken כבר מסלק כל עיטור
+     אחר מהמפתח, ולכן די בבדיקה המחמירה: "1*" נפסל, "1" עובר. */
   function isPlainNumericKey(key) {
-    const k = String(key || "");
-    if (k.includes("*")) return false;
-    return /^[^0-9א-תךםןףץ]*\d+[^0-9א-תךםןףץ]*$/.test(k);
+    return /^\d+$/.test(String(key || ""));
   }
 
   function extractRefsFromLineByTag(line, tagName) {
