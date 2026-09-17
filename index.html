@@ -1019,7 +1019,7 @@
                     title="שם תגית HTML לזיהוי (למשל sup) — או ביטוי רגולרי (regex) לזיהוי לפי תבנית טקסט חופשית" />
                   <span id="tagBookMode" class="tagModeBadge tagModeBadge-tag" title="הזיהוי מתבצע כרגע לפי שם תגית HTML">🏷️ תגית</span>
                 </div>
-                <p class="tinyHint">אפשר גם ביטוי רגולרי (regex) במקום תגית, למשל: <span class="mono" dir="ltr">\([א-ת"'׳״]{1,3}\)</span></p>
+                <p class="tinyHint">אפשר גם ביטוי רגולרי (regex) במקום תגית, למשל: <span class="mono" dir="ltr">\([א-ת"'׳״]{1,3}\**\)</span></p>
               </div>
 
               <div class="fRow">
@@ -1029,7 +1029,7 @@
                     title="שם תגית HTML לזיהוי (למשל sup) — או ביטוי רגולרי (regex) לזיהוי לפי תבנית טקסט חופשית" />
                   <span id="tagNotesMode" class="tagModeBadge tagModeBadge-tag" title="הזיהוי מתבצע כרגע לפי שם תגית HTML">🏷️ תגית</span>
                 </div>
-                <p class="tinyHint">אפשר גם ביטוי רגולרי (regex) במקום תגית, למשל: <span class="mono" dir="ltr">\([א-ת"'׳״]{1,3}\)</span></p>
+                <p class="tinyHint">אפשר גם ביטוי רגולרי (regex) במקום תגית, למשל: <span class="mono" dir="ltr">\([א-ת"'׳״]{1,3}\**\)</span></p>
               </div>
             </div>
 
@@ -1047,28 +1047,39 @@
                         <option value="midrash">מדרש (midrash)</option>
                         <option value="parshanut">פרשנות (parshanut)</option>
                         <option value="dibur_hamatchil">דיבור המתחיל (dibur_hamatchil)</option>
+                        <option value="elucidation">ביאור (elucidation)</option>
+                        <option value="explication">ביאור — נוסח חלופי (explication)</option>
+                        <option value="footnotes">הערות שוליים (footnotes)</option>
                       </optgroup>
                       <optgroup label="סוגי קישור — יופיעו בפאנל הקישורים">
-                        <option value="reference">הפניה (reference)</option>
-                        <option value="quotation">ציטוט (quotation)</option>
+                        <!--
+                        שמות חלופיים (aliases) שאינם נשמרים כסוג ConnectionType נפרד ב-DB
+                        אלא ממופים לסוג אחר. ביצירת קישורים חדשים בוחרים בסוג הקנוני.
                         <option value="quotation_auto">ציטוט אוטומטי (quotation_auto)</option>
                         <option value="quotation_auto_tanakh">ציטוט אוטומטי מהתנ״ך (quotation_auto_tanakh)</option>
-                        <option value="explication">ביאור (explication)</option>
                         <option value="related passage">קטע קשור (related passage)</option>
-                        <option value="related">קשור (related)</option>
-                        <option value="allusion">רמז (allusion)</option>
-                        <option value="mesorat hashas">מסורת הש״ס (mesorat hashas)</option>
-                        <option value="ein mishpat">עין משפט (ein mishpat)</option>
                         <option value="ein mishpat / ner mitsvah">עין משפט / נר מצווה</option>
-                        <option value="mishnah in talmud">משנה בתלמוד (mishnah in talmud)</option>
-                        <option value="law">הלכה (law)</option>
-                        <option value="footnotes">הערות שוליים (footnotes)</option>
-                        <option value="liturgy">ליטורגיה — נוסח תפילה (liturgy)</option>
-                        <option value="linker">קישור אוטומטי — linker</option>
+                        -->
+                        <!-- התוויות העבריות כאן זהות לאלה שאוצריא מציגה בפועל
+                             (LinkTypes.hebrewLabels), כדי שמה שנבחר בתפריט יהיה
+                             מה שהמשתמש יראה אחר כך בפאנל. -->
+                        <option value="reference">עיון (reference)</option>
+                        <option value="quotation">ציטוט (quotation)</option>
+                        <option value="related">נושא קרוב (related)</option>
+                        <option value="allusion">אזכור (allusion)</option>
+                        <option value="mesorat_hashas">מסורת הש״ס (mesorat hashas)</option>
+                        <option value="ein_mishpat">עין משפט (ein mishpat)</option>
+                        <option value="mishnah_in_talmud">משנה בתלמוד (mishnah in talmud)</option>
+                        <option value="law">פסיקת הלכה (law)</option>
+                        <option value="liturgy">תפילה (liturgy)</option>
+                        <option value="linker">אוטומטי (linker)</option>
                         <option value="summary">סיכום (summary)</option>
-                        <option value="sifrei mitsvot">ספרי מצוות (sifrei mitsvot)</option>
-                        <option value="none">לא מוגדר (none)</option>
-                        <option value="">לא ידוע (ריק)</option>
+                        <option value="sifrei_mitzvot">ספרי מצוות (sifrei mitzvot)</option>
+                        <option value="essay">מאמר / חיבור (essay)</option>
+                        <!-- none וערך ריק ממופים שניהם ל-OTHER בגנרטור
+                             (ConnectionType.fromString: "", "none" -> OTHER),
+                             ולכן נותרה אפשרות קנונית אחת במקום שלוש זהות. -->
+                        <option value="other">לא מסווג (other)</option>
                       </optgroup>
                     </select>
                   </div>
@@ -1571,6 +1582,7 @@
   function stripWrapperChars(token) {
     let out = String(token || "").trim();
     const wrapperChars = `"'״׳()[]{}<>«»`;
+    /* שים לב: כוכבית (*) אינה תו-עטיפה — היא חלק מהמזהה ("סג*" ≠ "סג") ולכן אסור לקלף אותה כאן. */
     while (out.length >= 2 && wrapperChars.includes(out[0]) && wrapperChars.includes(out[out.length - 1])) {
       out = out.slice(1, -1).trim();
     }
@@ -1633,7 +1645,14 @@
 
     if (!Number.isFinite(num)) return null;
 
-    const key = `${prefix}${num}${suffix}`;
+    /* המפתח נושא את המספר ואת הכוכביות בלבד. הכוכבית היא חלק מזהות הסימון
+       ("סג*" ≠ "סג") ולכן חייבת להישמר, אבל כל שאר הפיסוק הוא עיטור שכל צד
+       עשוי לכתוב אחרת: הספר מסמן <sup>1</sup> ואילו קובץ ההערות פותח את אותה
+       הערה עצמה ב-"1)" או ב-"1.". מפתח שנושא את העיטור לא היה מתאים בין שני
+       הצדדים, והקובץ כולו היה יוצא בלי אף קישור. prefix/suffix הגולמיים
+       נשמרים כמות שהם עבור דוח הכפילויות. */
+    const stars = s => "*".repeat((String(s).match(/\*/g) || []).length);
+    const key = `${stars(prefix)}${num}${stars(suffix)}`;
     const hasDecoration = (prefix + suffix).length > 0;
 
     return {
@@ -1646,6 +1665,8 @@
     };
   }
 
+  /* מפתח "מספרי פשוט" = מספר בלי כוכבית. normalizeRefToken כבר מסלק כל עיטור
+     אחר מהמפתח, ולכן די בבדיקה המחמירה: "1*" נפסל, "1" עובר. */
   function isPlainNumericKey(key) {
     return /^\d+$/.test(String(key || ""));
   }
@@ -1669,7 +1690,14 @@
       const rawInside = closeMatch ? tail.slice(0, closeMatch.index) : tail.slice(0, 220);
       const insidePlain = rawInside.replace(/<[^>]*>/g, " ").trim();
 
-      const tokenMatch = insidePlain.match(/([^0-9א-תךםןףץ\s<>\u200e\u200f\u202a-\u202e]*?(?:\d+|[א-תךםןףץ"'״׳\u05F3\u05F4-]+)[^0-9א-תךםןףץ\s<>\u200e\u200f\u202a-\u202e]*?)/);
+      /* הכמתים כאן חייבים להיות חמדניים (greedy) ולא עצלים (*?).
+         עם כמתים עצלים "(סג*)" נקטע ל-"(סג" — הכוכבית נבלעת, ולכן
+         "(סג*)" ו-"(סג)" מקבלים בדיוק אותו מפתח, וההערה עם הכוכבית לא מקושרת.
+         בנוסף, המפתח יצא "(63" (עם עיטור) במקום "63", ולכן גם isPlainNumericKey
+         נכשל ואיתור איפוס-המספור בין פרקים מפסיק לעבוד.
+         חמדנות כאן בטוחה: מחלקות התווים מדירות רווחים, אותיות, ספרות ו-<>,
+         כך שההרחבה חסומה בגבולות האסימון וסופגת רק פיסוק/כוכביות שצמודות למספר. */
+      const tokenMatch = insidePlain.match(/([^0-9א-תךםןףץ\s<>\u200e\u200f\u202a-\u202e]*(?:\d+|[א-תךםןףץ"'״׳\u05F3\u05F4-]+)[^0-9א-תךםןףץ\s<>\u200e\u200f\u202a-\u202e]*)/);
       if (tokenMatch && tokenMatch[1]) {
         const ref = normalizeRefToken(tokenMatch[1]);
         if (ref) {
@@ -1848,11 +1876,13 @@
       currentState.linkedCount >= 2 &&
       currentState.maxSeen >= 3 &&
       prev &&
-      prev.key !== "1"
+      !(prev.num === 1 && isPlainNumericKey(prev.key))
     ) {
-      const future =[next1?.key, next2?.key, next3?.key].filter(Boolean);
-      const hasPlain2 = future.includes("2");
-      const hasPlain3 = future.includes("3");
+      /* השוואה לפי num ולא לפי מחרוזת המפתח: מפתח מעוטר ("(2)", "2.") אינו
+         שווה ל-"2", וההשוואה הקשיחה הישנה הייתה מחמיצה אותו. */
+      const future =[next1, next2, next3].filter(Boolean);
+      const hasPlain2 = future.some(o => o.num === 2 && isPlainNumericKey(o.key));
+      const hasPlain3 = future.some(o => o.num === 3 && isPlainNumericKey(o.key));
 
       if (hasPlain2 || hasPlain3) {
         return { advance: true, reason: "איפוס מספור קלאסי בספר" };
@@ -2028,7 +2058,8 @@
           (
             currentBookChapterState.missesInRow >= 2 ||
             (occ.num <= 3 && currentBookChapterState.maxSeen >= 5) ||
-            (occ.key === "1" && currentBookChapterState.linkedCount >= 3)
+            (occ.num === 1 && isPlainNumericKey(occ.key) &&
+              currentBookChapterState.linkedCount >= 3)
           )
         ) {
           moveToNextBookChapter("מעבר הצלה לאחר פספוסים", occ);
