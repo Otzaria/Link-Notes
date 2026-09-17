@@ -1047,11 +1047,14 @@
                         <option value="midrash">מדרש (midrash)</option>
                         <option value="parshanut">פרשנות (parshanut)</option>
                         <option value="dibur_hamatchil">דיבור המתחיל (dibur_hamatchil)</option>
+                        <option value="elucidation">ביאור (elucidation)</option>
+                        <option value="explication">ביאור — נוסח חלופי (explication)</option>
+                        <option value="footnotes">הערות שוליים (footnotes)</option>
                       </optgroup>
                       <optgroup label="סוגי קישור — יופיעו בפאנל הקישורים">
-                        <!-- 
-                        לא קיים כרגע ב DB מקווה שישתנה בקרוב 
-                        <option value="footnotes">הערות שוליים (footnotes)</option>
+                        <!--
+                        שמות חלופיים (aliases) שאינם נשמרים כסוג ConnectionType נפרד ב-DB
+                        אלא ממופים לסוג אחר. ביצירת קישורים חדשים בוחרים בסוג הקנוני.
                         <option value="quotation_auto">ציטוט אוטומטי (quotation_auto)</option>
                         <option value="quotation_auto_tanakh">ציטוט אוטומטי מהתנ״ך (quotation_auto_tanakh)</option>
                         <option value="related passage">קטע קשור (related passage)</option>
@@ -1059,7 +1062,6 @@
                         -->
                         <option value="reference">הפניה (reference)</option>
                         <option value="quotation">ציטוט (quotation)</option>
-                        <option value="explication">ביאור (explication)</option>
                         <option value="related">קשור (related)</option>
                         <option value="allusion">רמז (allusion)</option>
                         <option value="mesorat_hashas">מסורת הש״ס (mesorat hashas)</option>
@@ -1070,8 +1072,11 @@
                         <option value="linker">קישור אוטומטי — linker</option>
                         <option value="summary">סיכום (summary)</option>
                         <option value="sifrei_mitsvot">ספרי מצוות (sifrei mitsvot)</option>
-                        <option value="none">לא מוגדר (none)</option>
-                        <option value="">לא ידוע (ריק)</option>
+                        <option value="essay">מאמר / חיבור (essay)</option>
+                        <!-- none וערך ריק ממופים שניהם ל-OTHER בגנרטור
+                             (ConnectionType.fromString: "", "none" -> OTHER),
+                             ולכן נותרה אפשרות קנונית אחת במקום שלוש זהות. -->
+                        <option value="other">לא מסווג (other)</option>
                       </optgroup>
                     </select>
                   </div>
@@ -1650,8 +1655,15 @@
     };
   }
 
+  /* מפתח "מספרי פשוט" = ספרות עשרוניות, אולי בעיטור פיסוק שנשאר צמוד למספר
+     ("1.", "1)"). מאז המעבר לכמתים חמדניים ב-extractRefsFromLineByTag פיסוק
+     נגרר בלי פותח תואם שורד את stripWrapperChars ונשאר במפתח, ולכן בדיקת
+     /^\d+$/ בלבד הייתה מכבה את זיהוי איפוס-המספור בין פרקים בספרים שמסמנים
+     "1." או "1)". כוכבית פוסלת: היא חלק מהמזהה ("63*" ≠ "63"). */
   function isPlainNumericKey(key) {
-    return /^\d+$/.test(String(key || ""));
+    const k = String(key || "");
+    if (k.includes("*")) return false;
+    return /^[^0-9א-תךםןףץ]*\d+[^0-9א-תךםןףץ]*$/.test(k);
   }
 
   function extractRefsFromLineByTag(line, tagName) {
@@ -1859,11 +1871,13 @@
       currentState.linkedCount >= 2 &&
       currentState.maxSeen >= 3 &&
       prev &&
-      prev.key !== "1"
+      !(prev.num === 1 && isPlainNumericKey(prev.key))
     ) {
-      const future =[next1?.key, next2?.key, next3?.key].filter(Boolean);
-      const hasPlain2 = future.includes("2");
-      const hasPlain3 = future.includes("3");
+      /* השוואה לפי num ולא לפי מחרוזת המפתח: מפתח מעוטר ("(2)", "2.") אינו
+         שווה ל-"2", וההשוואה הקשיחה הישנה הייתה מחמיצה אותו. */
+      const future =[next1, next2, next3].filter(Boolean);
+      const hasPlain2 = future.some(o => o.num === 2 && isPlainNumericKey(o.key));
+      const hasPlain3 = future.some(o => o.num === 3 && isPlainNumericKey(o.key));
 
       if (hasPlain2 || hasPlain3) {
         return { advance: true, reason: "איפוס מספור קלאסי בספר" };
