@@ -1060,18 +1060,21 @@
                         <option value="related passage">קטע קשור (related passage)</option>
                         <option value="ein mishpat / ner mitsvah">עין משפט / נר מצווה</option>
                         -->
-                        <option value="reference">הפניה (reference)</option>
+                        <!-- התוויות העבריות כאן זהות לאלה שאוצריא מציגה בפועל
+                             (LinkTypes.hebrewLabels), כדי שמה שנבחר בתפריט יהיה
+                             מה שהמשתמש יראה אחר כך בפאנל. -->
+                        <option value="reference">עיון (reference)</option>
                         <option value="quotation">ציטוט (quotation)</option>
-                        <option value="related">קשור (related)</option>
-                        <option value="allusion">רמז (allusion)</option>
+                        <option value="related">נושא קרוב (related)</option>
+                        <option value="allusion">אזכור (allusion)</option>
                         <option value="mesorat_hashas">מסורת הש״ס (mesorat hashas)</option>
                         <option value="ein_mishpat">עין משפט (ein mishpat)</option>
                         <option value="mishnah_in_talmud">משנה בתלמוד (mishnah in talmud)</option>
-                        <option value="law">הלכה (law)</option>
-                        <option value="liturgy">ליטורגיה — נוסח תפילה (liturgy)</option>
-                        <option value="linker">קישור אוטומטי — linker</option>
+                        <option value="law">פסיקת הלכה (law)</option>
+                        <option value="liturgy">תפילה (liturgy)</option>
+                        <option value="linker">אוטומטי (linker)</option>
                         <option value="summary">סיכום (summary)</option>
-                        <option value="sifrei_mitsvot">ספרי מצוות (sifrei mitsvot)</option>
+                        <option value="sifrei_mitzvot">ספרי מצוות (sifrei mitzvot)</option>
                         <option value="essay">מאמר / חיבור (essay)</option>
                         <!-- none וערך ריק ממופים שניהם ל-OTHER בגנרטור
                              (ConnectionType.fromString: "", "none" -> OTHER),
@@ -2055,7 +2058,8 @@
           (
             currentBookChapterState.missesInRow >= 2 ||
             (occ.num <= 3 && currentBookChapterState.maxSeen >= 5) ||
-            (occ.key === "1" && currentBookChapterState.linkedCount >= 3)
+            (occ.num === 1 && isPlainNumericKey(occ.key) &&
+              currentBookChapterState.linkedCount >= 3)
           )
         ) {
           moveToNextBookChapter("מעבר הצלה לאחר פספוסים", occ);
