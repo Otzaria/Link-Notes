@@ -50,6 +50,18 @@
       --elev-3:0 6px 16px rgba(0,0,0,.18), 0 2px 4px rgba(0,0,0,.10);
       --radius-xs:4px;
       --radius-full:999px;
+      /* תפקידים סמנטיים נוספים שאין ב-M3 הבסיסי. לכל אחד יש ערך נגדי
+         בבלוק הכהה שמתחת — זה מה שמאפשר להחליף ערכה בלי לגעת בכללים. */
+      --info:#1d4ed8;                   --info-container:#dbeafe;
+      --info-surface:#eef4ff;           --on-info-container:#1e3a8a;
+      --info-container-high:#cfe4fd;
+      --on-success-container:#166534;   --success-surface:#f0fdf4;
+      --success-outline:#86efac;        --success-outline-high:#4ade80;
+      --warning-surface:#fff8ec;
+      --error-surface:#fdeeee;          --error-surface-high:#fbdede;
+      --highlight:#fde047;              --on-highlight:#111827;
+      --code-bg:#241f19;                --code-fg:#f2e9dd;
+      --dot-idle:#d1d5db;
       --font-ui:"Segoe UI",Roboto,"Helvetica Neue",Arial,"Noto Sans Hebrew",sans-serif;
       --font-book:"Frank Ruhl Libre","FrankRuehl CLM","Taamey Frank CLM",David,
                   "Noto Serif Hebrew",Georgia,"Times New Roman",serif;
@@ -245,14 +257,14 @@
 
     /* כפתור בולט להורדת אופליין */
     .btn-offline {
-      background: #f0fdf4;
-      border-color: #86efac;
-      color: #166534;
+      background: var(--success-surface);
+      border-color: var(--success-outline);
+      color: var(--on-success-container);
       font-weight: 700;
     }
     .btn-offline:hover {
-      background: #dcfce7;
-      border-color: #4ade80;
+      background: var(--success-container);
+      border-color: var(--success-outline-high);
     }
 
     .rightTools{
@@ -352,7 +364,7 @@
     .fRow input{
       min-width:0;
       width:100%;
-      background:#ffffffcc;
+      background:var(--surface-container-lowest);
     }
 
     .tagInputWrap{
@@ -381,13 +393,13 @@
     }
 
     .tagModeBadge-tag{
-      background:#eef2f1;
+      background:var(--surface-container-high);
       color:var(--accent2);
     }
 
     .tagModeBadge-regex{
-      background:#eef4ff;
-      color:#1d4ed8;
+      background:var(--info-surface);
+      color:var(--on-info-container);
     }
 
     .tinyHint{
@@ -416,7 +428,7 @@
       width:8px;
       height:8px;
       border-radius:50%;
-      background:#d1d5db;
+      background:var(--dot-idle);
     }
 
     .ok .dot{background:var(--ok)}
@@ -450,8 +462,8 @@
       padding:14px 14px;
       border:1px solid var(--line);
       border-radius:var(--radius);
-      background:#241f19;
-      color:#f2e9dd;
+      background:var(--code-bg);
+      color:var(--code-fg);
       white-space:pre-wrap;
       word-break:break-word;
       max-height:520px;
@@ -529,6 +541,103 @@
       text-decoration: underline;
     }
 
+
+    /* ===== מצב כהה — דריסת תפקידים בלבד. כל הכינויים והכללים שמתחת
+       נגזרים מהם, ולכן אין צורך לשכפל אף כלל. הערכים זהים ל-OtzariaLinker,
+       שנגזרו מ-AppSurfaces של אוצריא (panelBackground כהה = שחור). ===== */
+    :root[data-theme="dark"]{
+      --primary:#f4bd6f;                --on-primary:#452b00;
+      --primary-container:#633f00;      --on-primary-container:#ffddb3;
+      --secondary:#ddc2a1;              --on-secondary:#3e2d16;
+      --secondary-container:#56442a;    --on-secondary-container:#fbdebc;
+      --tertiary:#b8cea1;               --on-tertiary:#243515;
+      --tertiary-container:#3a4c2a;     --on-tertiary-container:#d4eabb;
+      --error:#ffb4ab;                  --on-error:#690005;
+      --error-container:#93000a;        --on-error-container:#ffdad6;
+      --outline:#9c8f80;                --outline-variant:#4f4539;
+      --surface:#18120b;                --on-surface:#ede0d4;
+      --surface-container-lowest:#120d07;
+      --surface-container-low:#201b13;
+      --surface-container:#251f17;
+      --surface-container-high:#2f2921;
+      --surface-container-highest:#3b342b;
+      --on-surface-variant:#d3c4b4;
+      --app-bg:#000000;
+      --warning:#ffc46b;                --warning-container:#4a3000;
+      --on-warning-container:#ffdfa8;
+      --success:#7ddb9b;                --success-container:#17422a;
+      --elev-1:0 1px 2px rgba(0,0,0,.5);
+      --elev-3:0 6px 16px rgba(0,0,0,.6);
+
+      --info:#a8c7fa;                   --info-container:#26364f;
+      --info-surface:#1b2536;           --on-info-container:#d3e3fd;
+      --info-container-high:#31435f;
+      --on-success-container:#c9f2d8;   --success-surface:#10291b;
+      --success-outline:#2f6b45;        --success-outline-high:#3f8a5b;
+      --warning-surface:#2a1f0c;
+      --error-surface:#33161a;          --error-surface-high:#451d22;
+      --highlight:#7a5f1c;              --on-highlight:#ffe9a8;
+      --code-bg:#0c0906;                --code-fg:#ede0d4;
+      --dot-idle:#4f4539;
+    }
+
+    /* ברירת מחדל לפי העדפת המערכת, אלא אם המשתמש בחר מפורשות מצב בהיר */
+    @media (prefers-color-scheme: dark){
+      :root:not([data-theme="light"]){
+        --primary:#f4bd6f;                --on-primary:#452b00;
+        --primary-container:#633f00;      --on-primary-container:#ffddb3;
+        --secondary:#ddc2a1;              --on-secondary:#3e2d16;
+        --secondary-container:#56442a;    --on-secondary-container:#fbdebc;
+        --tertiary:#b8cea1;               --on-tertiary:#243515;
+        --tertiary-container:#3a4c2a;     --on-tertiary-container:#d4eabb;
+        --error:#ffb4ab;                  --on-error:#690005;
+        --error-container:#93000a;        --on-error-container:#ffdad6;
+        --outline:#9c8f80;                --outline-variant:#4f4539;
+        --surface:#18120b;                --on-surface:#ede0d4;
+        --surface-container-lowest:#120d07;
+        --surface-container-low:#201b13;
+        --surface-container:#251f17;
+        --surface-container-high:#2f2921;
+        --surface-container-highest:#3b342b;
+        --on-surface-variant:#d3c4b4;
+        --app-bg:#000000;
+        --warning:#ffc46b;                --warning-container:#4a3000;
+        --on-warning-container:#ffdfa8;
+        --success:#7ddb9b;                --success-container:#17422a;
+        --elev-1:0 1px 2px rgba(0,0,0,.5);
+        --elev-3:0 6px 16px rgba(0,0,0,.6);
+        --info:#a8c7fa;                   --info-container:#26364f;
+        --info-surface:#1b2536;           --on-info-container:#d3e3fd;
+        --info-container-high:#31435f;
+        --on-success-container:#c9f2d8;   --success-surface:#10291b;
+        --success-outline:#2f6b45;        --success-outline-high:#3f8a5b;
+        --warning-surface:#2a1f0c;
+        --error-surface:#33161a;          --error-surface-high:#451d22;
+        --highlight:#7a5f1c;              --on-highlight:#ffe9a8;
+        --code-bg:#0c0906;                --code-fg:#ede0d4;
+        --dot-idle:#4f4539;
+      }
+    }
+
+    /* מתג ערכת הנושא */
+    .themeToggle{
+      position:fixed; top:12px; inset-inline-end:12px; z-index:60;
+      width:40px; height:40px; padding:0; justify-content:center;
+      border-radius:var(--radius-full);
+      background:var(--surface-container-lowest);
+      box-shadow:var(--elev-1);
+    }
+    .themeToggle .ic{margin-inline-end:0}
+    /* האייקון מראה לאן הלחיצה תוביל, לא היכן אנחנו נמצאים:
+       במצב בהיר מוצג ירח, ובמצב כהה מוצגת שמש. */
+    :root:not([data-theme="dark"]) .themeToggle .iconSun{display:none}
+    :root[data-theme="dark"] .themeToggle .iconMoon{display:none}
+    @media (prefers-color-scheme: dark){
+      :root:not([data-theme="light"]):not([data-theme="dark"]) .themeToggle .iconMoon{display:none}
+      :root:not([data-theme="light"]):not([data-theme="dark"]) .themeToggle .iconSun{display:inline-block}
+    }
+    @media print{ .themeToggle{display:none} }
+
     /* אייקוני SVG מוטמעים (ספרייט של OtzariaLinker) — בלי פונט אייקונים
        ובלי בקשת רשת, כדי שהעותק האופליין ייראה זהה. */
     .ic{
@@ -543,7 +652,7 @@
     .ic.xl{width:32px;height:32px;stroke-width:1.5}
     .ic.only{margin-inline-end:0}
     /* מכלים שכבר מרווחים בעצמם עם gap — לא להוסיף מרווח כפול */
-    button > .ic, .editorColHd > .ic, .ttl > .ic{margin-inline-end:0}
+    :where(button, .ttl, .editorColHd, .extraLabel) > .ic{margin-inline-end:0}
     /* מכלים שנושאים אייקון + טקסט ואינם flex מלכתחילה */
     .ttl, .editorColHd{display:flex;align-items:center;gap:8px}
     .extraLabel{display:inline-flex;align-items:center;gap:6px}
@@ -635,7 +744,7 @@
     .advancedBody{
       padding:14px;
       border-top:1px solid var(--line);
-      background:#fffdfa;
+      background:var(--surface);
       display:flex;
       flex-direction:column;
       align-items:center;
@@ -726,12 +835,12 @@
     .legendItem{display:inline-flex;align-items:center;gap:6px}
 
     .dotLg{width:10px;height:10px;border-radius:var(--radius-xs);display:inline-block;flex:0 0 auto}
-    .dotLg.linked{background:#16a34a}
-    .dotLg.unlinked{background:#f59e0b}
-    .dotLg.orphan{background:#ef4444}
+    .dotLg.linked{background:var(--success)}
+    .dotLg.unlinked{background:var(--warning)}
+    .dotLg.orphan{background:var(--error)}
     .dotLg.duplicate{background:var(--gold)}
     .dotLg.pending{background:var(--accent)}
-    .dotLg.flashDot{background:#60a5fa}
+    .dotLg.flashDot{background:var(--info)}
 
     .editorGrid{
       display:grid;
@@ -797,7 +906,7 @@
       display:flex;
       gap:8px;
       padding:4px 8px;
-      border-bottom:1px solid #f1ece4;
+      border-bottom:1px solid var(--outline-variant);
       cursor:pointer;
       align-items:flex-start;
     }
@@ -824,31 +933,31 @@
     }
 
     .lnRow .lnText mark.tagHl{
-      background:#fde047;
-      color:#111827;
+      background:var(--highlight);
+      color:var(--on-highlight);
       padding:0 1px;
       border-radius:var(--radius-xs);
       box-decoration-break:clone;
       -webkit-box-decoration-break:clone;
     }
 
-    .lnRow.status-linked{background:#eef7f0}
-    .lnRow.status-linked:hover{background:#e2f1e6}
-    .lnRow.status-unlinked{background:#fff8ec}
-    .lnRow.status-unlinked:hover{background:#fdf0d8}
-    .lnRow.status-orphan{background:#fdeeee}
-    .lnRow.status-orphan:hover{background:#fbdede}
-    .lnRow.status-duplicate{background:#f7f0e3}
-    .lnRow.status-duplicate:hover{background:#f1e6cc}
+    .lnRow.status-linked{background:var(--success-surface)}
+    .lnRow.status-linked:hover{background:var(--success-container)}
+    .lnRow.status-unlinked{background:var(--warning-surface)}
+    .lnRow.status-unlinked:hover{background:var(--warning-container)}
+    .lnRow.status-orphan{background:var(--error-surface)}
+    .lnRow.status-orphan:hover{background:var(--error-surface-high)}
+    .lnRow.status-duplicate{background:var(--surface-container-high)}
+    .lnRow.status-duplicate:hover{background:var(--surface-container-highest)}
     .lnRow.status-pending{outline:2px solid var(--accent);outline-offset:-2px}
     .lnRow.status-activeSel{outline:2px solid var(--gold);outline-offset:-2px}
     .lnRow.status-flash{
-      background:#dbeafe;
-      outline:2px solid #60a5fa;
+      background:var(--info-container);
+      outline:2px solid var(--info);
       outline-offset:-2px;
       transition:background .2s ease;
     }
-    .lnRow.status-flash:hover{background:#cfe4fd}
+    .lnRow.status-flash:hover{background:var(--info-container-high)}
 
     .linkRow{
       display:flex;
@@ -866,8 +975,8 @@
     .linkRow:hover{box-shadow:0 2px 8px rgba(28,25,20,.09)}
     .linkRow.active{background:var(--panelBg);border-color:var(--gold)}
     .linkRow.flash{
-      background:#dbeafe;
-      outline:2px solid #60a5fa;
+      background:var(--info-container);
+      outline:2px solid var(--info);
       outline-offset:-2px;
       transition:background .2s ease;
     }
@@ -947,7 +1056,7 @@
     }
 
     .extraRow.extraRange{color:var(--accent2)}
-    .extraRow.extraAnchor{color:#1d4ed8}
+    .extraRow.extraAnchor{color:var(--on-info-container)}
 
     .extraLabel{
       font-weight:700;
@@ -963,8 +1072,8 @@
     }
 
     .extraRow.extraAnchor input[type="number"]{
-      background:#eef4ff;
-      color:#1d4ed8;
+      background:var(--info-surface);
+      color:var(--on-info-container);
     }
 
     .extraTo{font-size:11px;color:var(--muted)}
@@ -1012,6 +1121,8 @@
      להוספת אייקון: להעתיק את ה-symbol המתאים מ-OtzariaLinker, ולהשתמש בתגית
      svg עם class="ic" שמכילה use שמצביע על מזהה ה-symbol. -->
 <svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false"><defs>
+  <symbol id="ic-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M2 12h2M20 12h2M4.9 4.9 6.3 6.3M17.7 17.7l1.4 1.4M19.1 4.9l-1.4 1.4M6.3 17.7l-1.4 1.4"/></symbol>
+  <symbol id="ic-moon" viewBox="0 0 24 24"><path d="M20 13.5A8.5 8.5 0 0 1 10.5 4a8.5 8.5 0 1 0 9.5 9.5z"/></symbol>
   <symbol id="ic-link" viewBox="0 0 24 24"><path d="M10.5 13.5a4 4 0 0 0 5.66 0l2.83-2.83a4 4 0 0 0-5.66-5.66l-1.41 1.42"/><path d="M13.5 10.5a4 4 0 0 0-5.66 0L5 13.34a4 4 0 0 0 5.66 5.66l1.41-1.42"/></symbol>
   <symbol id="ic-file-text" viewBox="0 0 24 24"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5"/><path d="M9 13h6M9 17h4"/></symbol>
   <symbol id="ic-download" viewBox="0 0 24 24"><path d="M12 4v12"/><path d="m8 12 4 4 4-4"/><path d="M4 16v2.5A2.5 2.5 0 0 0 6.5 21h11a2.5 2.5 0 0 0 2.5-2.5V16"/></symbol>
@@ -1033,6 +1144,11 @@
   <div class="wrap">
     
     <!-- אזור ההסבר בראש הדף -->
+    <button id="btnTheme" class="themeToggle" type="button" title="החלפה בין מצב בהיר לכהה" aria-label="החלפת ערכת נושא">
+      <svg class="ic iconSun" aria-hidden="true"><use href="#ic-sun"/></svg>
+      <svg class="ic iconMoon" aria-hidden="true"><use href="#ic-moon"/></svg>
+    </button>
+
     <div class="hero">
       <div class="heroTitleRow">
         <div class="icon" aria-hidden="true"><svg class="ic xl only" aria-hidden="true"><use href="#ic-link"/></svg></div>
@@ -1340,6 +1456,46 @@
   */
 
   /* חלק 1: אלמנטים קבועים מהממשק ומצב הריצה */
+  /* ערכת נושא: "light" / "dark" מפורשים, או null = לפי העדפת המערכת.
+     נשמר ב-localStorage ולכן שורד גם בעותק האופליין המורד. גישה ל-
+     localStorage עטופה ב-try/catch כי בחלון פרטי או מקובץ file:// היא
+     עלולה לזרוק, ואסור שזה יעצור את אתחול הדף. */
+  const THEME_KEY = "linkNotes.theme";
+
+  function readStoredTheme() {
+    try {
+      const v = localStorage.getItem(THEME_KEY);
+      return v === "light" || v === "dark" ? v : null;
+    } catch (e) {
+      return null;
+    }
+  }
+
+  function applyTheme(theme) {
+    if (theme) document.documentElement.setAttribute("data-theme", theme);
+    else document.documentElement.removeAttribute("data-theme");
+  }
+
+  function currentTheme() {
+    const explicit = document.documentElement.getAttribute("data-theme");
+    if (explicit === "light" || explicit === "dark") return explicit;
+    return window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches
+      ? "dark"
+      : "light";
+  }
+
+  function toggleTheme() {
+    const next = currentTheme() === "dark" ? "light" : "dark";
+    applyTheme(next);
+    try {
+      localStorage.setItem(THEME_KEY, next);
+    } catch (e) {
+      /* אין אחסון - הבחירה תקפה לסשן הנוכחי בלבד */
+    }
+  }
+
+  applyTheme(readStoredTheme());
+
   const els = {
     btnBook: document.getElementById("btnBook"),
     btnNotes: document.getElementById("btnNotes"),
@@ -1351,6 +1507,7 @@
     btnDownload: document.getElementById("btnDownload"),
     btnCopy: document.getElementById("btnCopy"),
     btnOffline: document.getElementById("btnOffline"),
+    btnTheme: document.getElementById("btnTheme"),
     out: document.getElementById("out"),
     path2: document.getElementById("path2"),
     tagBook: document.getElementById("tagBook"),
@@ -3473,6 +3630,11 @@
     const footerNote = clone.querySelector(".footerNote");
     if (footerNote) footerNote.remove();
 
+    /* לא מקבעים את ערכת הנושא הנוכחית בעותק: הסקריפט קובע אותה מחדש בטעינה
+       לפי localStorage או העדפת המערכת, ותכונה מקובעת הייתה רק גורמת להבהוב
+       של ערכה אחת לפני שהאחרת נכנסת. */
+    clone.removeAttribute("data-theme");
+
     return "<!doctype html>\n" + clone.outerHTML;
   }
 
@@ -3523,6 +3685,7 @@
        לגמרי כי אין בהם טעם בקובץ שכבר עובד אופליין - הבדיקה כאן מונעת שגיאת
        "cannot read property of null" שהייתה עוצרת את כל תהליך האתחול באמצע */
     if (els.btnOffline) els.btnOffline.addEventListener("click", downloadOfflineCopy);
+    if (els.btnTheme) els.btnTheme.addEventListener("click", toggleTheme);
     els.btnAdvancedEditor.addEventListener("click", toggleAdvancedEditor);
     els.btnCloseEditor.addEventListener("click", () => setEditorVisible(false));
     els.btnAddLink.addEventListener("click", addBlankLink);
