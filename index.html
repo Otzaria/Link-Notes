@@ -11,7 +11,7 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>מקשר הערות אוטומטי</title>
-  <link rel="icon" type="image/svg+xml" href='data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><text y=".9em" font-size="52">🔗</text></svg>' />
+  <link rel="icon" type="image/svg+xml" href='data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="%23805610" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.5 13.5a4 4 0 0 0 5.66 0l2.83-2.83a4 4 0 0 0-5.66-5.66l-1.41 1.42"/><path d="M13.5 10.5a4 4 0 0 0-5.66 0L5 13.34a4 4 0 0 0 5.66 5.66l1.41-1.42"/></svg>' />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Frank+Ruhl+Libre:wght@500;700;900&display=swap" rel="stylesheet" />
@@ -23,25 +23,57 @@
     */
     :root{
       /* פלטת הצבעים מותאמת לשפת העיצוב של otzaria.org (חם, גווני חום-קרם) */
-      --bg:#fefbf6;
-      --card:#ffffff;
-      --text:#1c1b1a;
-      --muted:#78716c;
-      --line:#e7e0d8;
-      --accent:#6b5d4f;
-      --accent2:#544539;
-      --secondary:#8b7355;
-      --gold:#9c7c4f;
-      --ok:#16a34a;
-      --warn:#f59e0b;
-      --err:#ef4444;
-      --shadow:0 10px 24px rgba(28,25,20,.08);
-      --radius:16px;
-      --radiusSm:12px;
-      --panelBg:#f4ede3;
-      --panelBorder:#e3d4bd;
-      --panelShadow:0 10px 22px rgba(107,93,79,.12);
-      --font-heading:"Frank Ruhl Libre","Segoe UI",Georgia,serif;
+      /* ===== M3 color roles — זהים ל-OtzariaLinker, שנגזרו מ-AppTokens
+         ו-AppSurfaces של אוצריא. זהו מקור האמת; הטוקנים הישנים שמתחת
+         הם כינויים בלבד, כדי ששאר הגיליון ימשיך לעבוד. ===== */
+      --primary:#805610;                --on-primary:#ffffff;
+      --primary-container:#ffddb3;      --on-primary-container:#633f00;
+      --secondary:#6f5b40;              --on-secondary:#ffffff;
+      --secondary-container:#fbdebc;    --on-secondary-container:#56442a;
+      --tertiary:#51643f;               --on-tertiary:#ffffff;
+      --tertiary-container:#d4eabb;     --on-tertiary-container:#3a4c2a;
+      --error:#ba1a1a;                  --on-error:#ffffff;
+      --error-container:#ffdad6;        --on-error-container:#93000a;
+      --outline:#817567;                --outline-variant:#d3c4b4;
+      --surface:#fff8f4;                --on-surface:#201b13;
+      --surface-container-lowest:#ffffff;
+      --surface-container-low:#fff1e5;
+      --surface-container:#f9ecdf;
+      --surface-container-high:#f3e6da;
+      --surface-container-highest:#ede0d4;
+      --on-surface-variant:#4f4539;
+      --app-bg:#f6ede5;
+      --warning:#8a5a00;                --on-warning-container:#4a3000;
+      --warning-container:#ffdfa8;
+      --success:#16a34a;                --success-container:#dcfce7;
+      --elev-1:0 1px 2px rgba(0,0,0,.10);
+      --elev-3:0 6px 16px rgba(0,0,0,.18), 0 2px 4px rgba(0,0,0,.10);
+      --radius-xs:4px;
+      --radius-full:999px;
+      --font-ui:"Segoe UI",Roboto,"Helvetica Neue",Arial,"Noto Sans Hebrew",sans-serif;
+      --font-book:"Frank Ruhl Libre","FrankRuehl CLM","Taamey Frank CLM",David,
+                  "Noto Serif Hebrew",Georgia,"Times New Roman",serif;
+
+      /* ===== כינויים לשמות הישנים ===== */
+      --bg:var(--app-bg);
+      --card:var(--surface-container-lowest);
+      --text:var(--on-surface);
+      --muted:var(--on-surface-variant);
+      --line:var(--outline-variant);
+      --accent:var(--primary);
+      --accent2:var(--on-primary-container);
+      --gold:var(--primary);
+      --ok:var(--success);
+      --warn:var(--warning);
+      --err:var(--error);
+      --shadow:var(--elev-3);
+      /* AppTokens.radius = 8 — מקור אמת יחיד באוצריא (היה 16) */
+      --radius:8px;
+      --radiusSm:6px;
+      --panelBg:var(--surface-container);
+      --panelBorder:var(--outline-variant);
+      --panelShadow:var(--elev-3);
+      --font-heading:var(--font-book);
     }
 
     *{box-sizing:border-box}
@@ -68,7 +100,7 @@
         radial-gradient(120% 140% at 100% 100%, rgba(139,115,85,.08), transparent 60%),
         var(--card);
       border:1px solid var(--line);
-      border-radius:24px;
+      border-radius:var(--radius);
       box-shadow:var(--shadow);
       padding:20px;
       margin-bottom:16px;
@@ -96,7 +128,7 @@
 
     .heroTitleRow .icon{
       width:36px;height:36px;
-      border-radius:12px;
+      border-radius:var(--radius);
       border:1px solid var(--line);
       background:var(--panelBg);
       display:flex;align-items:center;justify-content:center;
@@ -187,7 +219,7 @@
       padding:10px 14px;
       border-radius:var(--radiusSm);
       border:1px solid var(--line);
-      background:#fff;
+      background:var(--surface-container-lowest);
       color:var(--text);
       transition:background .15s ease,border-color .15s ease,transform .06s ease,box-shadow .15s ease;
       display:inline-flex;
@@ -205,9 +237,9 @@
 
     button:active{transform:translateY(1px)}
     button:disabled{opacity:.55;cursor:not-allowed;transform:none;box-shadow:none}
-    .primary{background:var(--accent);border-color:var(--accent);color:#fff;box-shadow:0 6px 16px rgba(107,93,79,.18)}
+    .primary{background:var(--accent);border-color:var(--accent);color:var(--on-primary);box-shadow:0 6px 16px rgba(107,93,79,.18)}
     .primary:hover{background:var(--accent2);border-color:var(--accent2);box-shadow:0 8px 20px rgba(107,93,79,.24)}
-    .ghost{background:#fff}
+    .ghost{background:var(--surface-container-lowest)}
     .ghost:not(:disabled){border-color:var(--accent);color:var(--accent)}
     .ghost:not(:disabled):hover{background:var(--panelBg)}
 
@@ -234,7 +266,7 @@
       padding:10px 12px;
       border-radius:var(--radiusSm);
       border:1px solid var(--line);
-      background:#fff;
+      background:var(--surface-container-lowest);
       color:var(--text);
       min-width:320px;
       outline:none;
@@ -249,7 +281,7 @@
       padding: 8px 12px;
       border-radius: var(--radiusSm);
       border: 1px solid var(--line);
-      background: #fff;
+      background: var(--surface-container-lowest);
       color: var(--text);
       font-family: inherit;
       font-size: 14px;
@@ -274,7 +306,7 @@
       max-width:1120px;
       margin-inline:auto;
       border:1px solid var(--panelBorder);
-      border-radius:18px;
+      border-radius:var(--radius);
       background:var(--panelBg);
       box-shadow:var(--panelShadow);
       padding:18px 16px;
@@ -342,7 +374,7 @@
       font-size:11px;
       font-weight:700;
       padding:3px 8px;
-      border-radius:999px;
+      border-radius:var(--radius-full);
       pointer-events:none;
       white-space:nowrap;
       transition:background-color .15s ease, color .15s ease;
@@ -435,9 +467,9 @@
       inset-inline-start:24px;
       bottom:24px;
       padding:10px 12px;
-      border-radius:12px;
+      border-radius:var(--radius);
       border:1px solid var(--line);
-      background:#fff;
+      background:var(--surface-container-lowest);
       box-shadow:var(--shadow);
       color:var(--text);
       opacity:0;
@@ -497,12 +529,31 @@
       text-decoration: underline;
     }
 
+    /* אייקוני SVG מוטמעים (ספרייט של OtzariaLinker) — בלי פונט אייקונים
+       ובלי בקשת רשת, כדי שהעותק האופליין ייראה זהה. */
+    .ic{
+      width:20px; height:20px; flex:0 0 auto;
+      display:inline-block; vertical-align:-.22em;
+      fill:none; stroke:currentColor; stroke-width:1.9;
+      stroke-linecap:round; stroke-linejoin:round;
+      margin-inline-end:.45em;
+    }
+    .ic.sm{width:16px;height:16px;stroke-width:2}
+    .ic.lg{width:24px;height:24px;stroke-width:1.7}
+    .ic.xl{width:32px;height:32px;stroke-width:1.5}
+    .ic.only{margin-inline-end:0}
+    /* מכלים שכבר מרווחים בעצמם עם gap — לא להוסיף מרווח כפול */
+    button > .ic, .editorColHd > .ic, .ttl > .ic{margin-inline-end:0}
+    /* מכלים שנושאים אייקון + טקסט ואינם flex מלכתחילה */
+    .ttl, .editorColHd{display:flex;align-items:center;gap:8px}
+    .extraLabel{display:inline-flex;align-items:center;gap:6px}
+
     /* הגדרות מתקדמות (Accordion) */
     details.advancedSettings{
       margin-top:14px;
       border:1px solid var(--panelBorder);
-      border-radius:14px;
-      background:#fff;
+      border-radius:var(--radius);
+      background:var(--surface-container-lowest);
       overflow:hidden;
     }
 
@@ -519,7 +570,7 @@
     }
 
     details.advancedSettings > summary::-webkit-details-marker{display:none}
-    details.advancedSettings > summary::before{content:"⚙️ הגדרות מתקדמות";color:var(--accent2)}
+    details.advancedSettings > summary::before{content:"הגדרות מתקדמות";color:var(--accent2)}
     details.advancedSettings > summary::after{content:"▾";font-size:12px;color:var(--muted);transition:transform .18s ease}
     details.advancedSettings[open] > summary::after{transform:rotate(180deg)}
 
@@ -531,7 +582,7 @@
     details.guideBox{
       margin-bottom:16px;
       border:1px solid var(--panelBorder);
-      border-radius:18px;
+      border-radius:var(--radius);
       background:var(--panelBg);
       box-shadow:var(--panelShadow);
       overflow:hidden;
@@ -559,9 +610,9 @@
     .guideBody{
       margin:0 14px 14px;
       padding:14px 18px;
-      background:#fff;
+      background:var(--surface-container-lowest);
       border:1px solid var(--line);
-      border-radius:14px;
+      border-radius:var(--radius);
     }
 
     .guideBody ol{
@@ -632,7 +683,7 @@
       align-items:start;
       border:1px solid var(--line);
       border-radius:var(--radiusSm);
-      background:#fff;
+      background:var(--surface-container-lowest);
       padding:8px 12px;
       cursor:pointer;
       text-align:right;
@@ -674,7 +725,7 @@
 
     .legendItem{display:inline-flex;align-items:center;gap:6px}
 
-    .dotLg{width:10px;height:10px;border-radius:3px;display:inline-block;flex:0 0 auto}
+    .dotLg{width:10px;height:10px;border-radius:var(--radius-xs);display:inline-block;flex:0 0 auto}
     .dotLg.linked{background:#16a34a}
     .dotLg.unlinked{background:#f59e0b}
     .dotLg.orphan{background:#ef4444}
@@ -696,7 +747,7 @@
       border:1px solid var(--line);
       border-radius:var(--radiusSm);
       overflow:hidden;
-      background:#fff;
+      background:var(--surface-container-lowest);
       display:flex;
       flex-direction:column;
       min-width:0;
@@ -776,7 +827,7 @@
       background:#fde047;
       color:#111827;
       padding:0 1px;
-      border-radius:3px;
+      border-radius:var(--radius-xs);
       box-decoration-break:clone;
       -webkit-box-decoration-break:clone;
     }
@@ -806,8 +857,8 @@
       padding:10px 12px;
       margin:6px 4px;
       border:1px solid var(--line);
-      border-radius:10px;
-      background:#fff;
+      border-radius:var(--radius);
+      background:var(--surface-container-lowest);
       box-shadow:0 1px 2px rgba(28,25,20,.04);
       transition:background .2s ease, box-shadow .15s ease, border-color .15s ease;
     }
@@ -854,7 +905,7 @@
       border:1px solid var(--line);
       font-size:12px;
       max-width:150px;
-      background:#fff;
+      background:var(--surface-container-lowest);
     }
 
     .liActions{
@@ -865,19 +916,19 @@
     }
 
     .linkRow button{padding:6px 8px;font-size:13px;border-radius:8px;line-height:1}
-    .linkRow button.liPick.active{background:var(--gold);border-color:var(--gold);color:#fff}
-    .linkRow button.liDel{border-color:#fecaca;color:#b91c1c}
-    .linkRow button.liDel:hover{background:#fef2f2}
+    .linkRow button.liPick.active{background:var(--primary);border-color:var(--primary);color:var(--on-primary)}
+    .linkRow button.liDel{border-color:var(--error-container);color:var(--error)}
+    .linkRow button.liDel:hover{background:var(--error-container);color:var(--on-error-container)}
 
     .linkRow button.liChip{
       font-size:13px;
       padding:5px 7px;
       color:var(--muted);
-      background:#fff;
+      background:var(--surface-container-lowest);
       white-space:nowrap;
     }
     .linkRow button.liChip:hover{color:var(--accent);border-color:var(--accent)}
-    .linkRow button.liChip.on{background:var(--accent);border-color:var(--accent);color:#fff}
+    .linkRow button.liChip.on{background:var(--accent);border-color:var(--accent);color:var(--on-primary)}
 
     .linkCardExtra{
       display:flex;
@@ -955,12 +1006,36 @@
 </head>
 
 <body>
+<!-- ספרייט אייקונים מוטמע, מקורו ב-Otzaria/OtzariaLinker (סגנון קווי, viewBox 24x24).
+     מוטמע בקובץ ולא נטען מהרשת, כדי שהעותק האופליין ייראה זהה. איסיו #2 ב-OtzariaLinker
+     נפתח בדיוק בגלל פונט אייקונים שלא נטען אופליין והציג את שם האייקון כטקסט.
+     להוספת אייקון: להעתיק את ה-symbol המתאים מ-OtzariaLinker, ולהשתמש בתגית
+     svg עם class="ic" שמכילה use שמצביע על מזהה ה-symbol. -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false"><defs>
+  <symbol id="ic-link" viewBox="0 0 24 24"><path d="M10.5 13.5a4 4 0 0 0 5.66 0l2.83-2.83a4 4 0 0 0-5.66-5.66l-1.41 1.42"/><path d="M13.5 10.5a4 4 0 0 0-5.66 0L5 13.34a4 4 0 0 0 5.66 5.66l1.41-1.42"/></symbol>
+  <symbol id="ic-file-text" viewBox="0 0 24 24"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5"/><path d="M9 13h6M9 17h4"/></symbol>
+  <symbol id="ic-download" viewBox="0 0 24 24"><path d="M12 4v12"/><path d="m8 12 4 4 4-4"/><path d="M4 16v2.5A2.5 2.5 0 0 0 6.5 21h11a2.5 2.5 0 0 0 2.5-2.5V16"/></symbol>
+  <symbol id="ic-save" viewBox="0 0 24 24"><path d="M5 3h11l3 3v13a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2z"/><path d="M8 3v6h7V3"/><path d="M8 21v-6h8v6"/></symbol>
+  <symbol id="ic-book" viewBox="0 0 24 24"><path d="M4 5.5A2.5 2.5 0 0 1 6.5 3H19v15H6.5A2.5 2.5 0 0 0 4 20.5z"/><path d="M4 20.5A2.5 2.5 0 0 1 6.5 18H19v3H6.5A2.5 2.5 0 0 1 4 20.5z"/></symbol>
+  <symbol id="ic-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></symbol>
+  <symbol id="ic-delete" viewBox="0 0 24 24"><path d="M4 7h16"/><path d="M9.5 7V5a1 1 0 0 1 1-1h3a1 1 0 0 1 1 1v2"/><path d="M6 7v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V7"/><path d="M10 11v6M14 11v6"/></symbol>
+  <symbol id="ic-settings" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 14.5a1.6 1.6 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.6 1.6 0 0 0-1.8-.3 1.6 1.6 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.2a1.6 1.6 0 0 0-1-1.5 1.6 1.6 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.6 1.6 0 0 0 .3-1.8 1.6 1.6 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.2a1.6 1.6 0 0 0 1.5-1 1.6 1.6 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.6 1.6 0 0 0 1.8.3H9a1.6 1.6 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.2a1.6 1.6 0 0 0 1 1.5 1.6 1.6 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.6 1.6 0 0 0-.3 1.8V9a1.6 1.6 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.2a1.6 1.6 0 0 0-1.4 1z"/></symbol>
+  <symbol id="ic-tune" viewBox="0 0 24 24"><path d="M4 6h9M17 6h3M4 12h3M11 12h9M4 18h9M17 18h3"/><circle cx="15" cy="6" r="2"/><circle cx="9" cy="12" r="2"/><circle cx="15" cy="18" r="2"/></symbol>
+  <symbol id="ic-target" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="3.2"/><path d="M12 2v2.5M12 19.5V22M2 12h2.5M19.5 12H22"/></symbol>
+  <!-- שמות "start"/"end" הם הכיוון הלוגי; הציור עצמו פיזי. ב-RTL:
+       start = שמאלה (לכיוון הסוף), end = ימינה (לכיוון ההתחלה). -->
+  <symbol id="ic-range" viewBox="0 0 24 24"><path d="M5 6h14M5 18h14"/><path d="M12 8.5v7"/><path d="m9.5 11 2.5-2.5 2.5 2.5M9.5 13l2.5 2.5 2.5-2.5"/></symbol>
+  <symbol id="ic-word" viewBox="0 0 24 24"><path d="M4 6.5h16M4 17.5h16"/><rect x="7" y="10" width="10" height="4.5" rx="1.5" fill="currentColor" stroke="none" opacity=".25"/><rect x="7" y="10" width="10" height="4.5" rx="1.5"/></symbol>
+  <symbol id="ic-clipboard" viewBox="0 0 24 24"><rect x="8" y="3" width="8" height="4" rx="1"/><path d="M8 5H6.5A1.5 1.5 0 0 0 5 6.5v13A1.5 1.5 0 0 0 6.5 21h11a1.5 1.5 0 0 0 1.5-1.5v-13A1.5 1.5 0 0 0 17.5 5H16"/></symbol>
+  <symbol id="ic-refresh" viewBox="0 0 24 24"><path d="M20 12a8 8 0 1 1-2.3-5.6"/><path d="M20 4v5h-5"/></symbol>
+</defs></svg>
+
   <div class="wrap">
     
     <!-- אזור ההסבר בראש הדף -->
     <div class="hero">
       <div class="heroTitleRow">
-        <div class="icon" aria-hidden="true">🔗</div>
+        <div class="icon" aria-hidden="true"><svg class="ic xl only" aria-hidden="true"><use href="#ic-link"/></svg></div>
         <h1>מקשר הערות אוטומטי</h1>
       </div>
       <p>
@@ -972,14 +1047,14 @@
     <!-- מדריך שימוש מהיר, בעיקר עבור משתמשים חדשים -->
     <details class="guideBox" open>
       <summary>
-        <span>📖 מדריך שימוש מהיר — 5 צעדים</span>
+        <span><svg class="ic" aria-hidden="true"><use href="#ic-book"/></svg>מדריך שימוש מהיר — 5 צעדים</span>
       </summary>
       <div class="guideBody">
         <ol>
           <li><b>הכינו שני קבצי טקסט:</b> קובץ הספר וקובץ ההערות. בשניהם צריך לסמן את מספרי ההערות בתגית כמו <span class="mono">&lt;sup&gt;1&lt;/sup&gt;</span> — בדיוק במקום שבו אמורה להופיע ההפניה. אם הסימון בקבצים שלכם אינו תגית HTML (למשל "(א)" בסוגריים) — אפשר להזין בשדה התג ביטוי רגולרי (regex) במקום שם תגית, והכלי יזהה זאת אוטומטית.</li>
-          <li><b>ייבאו את שני הקבצים</b> בעזרת הכפתורים "📘 יבוא קובץ הספר" ו-"📝 יבוא קובץ ההערות" למטה.</li>
-          <li><b>לחצו על "⚙️ יצירת ה-JSON"</b> — הכלי יזהה אוטומטית את ההתאמות בין הספר להערות, ויצור את קובץ הקישורים.</li>
-          <li><b>בדקו את התוצאה.</b> אם משהו לא מדויק, פתחו את "🧩 עורך מתקדם" כדי לראות את הספר, ההערות והקישורים זה לצד זה, ולתקן במקום שצריך.</li>
+          <li><b>ייבאו את שני הקבצים</b> בעזרת הכפתורים "יבוא קובץ הספר" ו-"יבוא קובץ ההערות" למטה.</li>
+          <li><b>לחצו על "יצירת ה-JSON"</b> — הכלי יזהה אוטומטית את ההתאמות בין הספר להערות, ויצור את קובץ הקישורים.</li>
+          <li><b>בדקו את התוצאה.</b> אם משהו לא מדויק, פתחו את "עורך מתקדם" כדי לראות את הספר, ההערות והקישורים זה לצד זה, ולתקן במקום שצריך.</li>
           <li><b>הורידו את קובץ ה-JSON הסופי,</b> הכנסו באוצריא להגדרות > ספרייה > ייבוא דורות וקישורים ובחרו בקובץ ה-JSON.</li>
         </ol>
         <div class="hint" style="text-align:center;margin-top:10px">
@@ -995,10 +1070,10 @@
         <div class="hd"><b>שלב 1 — קלט</b></div>
         <div class="bd">
           <div class="row center stackOnMobile">
-            <button id="btnBook" class="primary" title="בחירת קובץ הטקסט הראשי (הספר) מהמחשב">📘 יבוא קובץ הספר</button>
+            <button id="btnBook" class="primary" title="בחירת קובץ הטקסט הראשי (הספר) מהמחשב"><svg class="ic" aria-hidden="true"><use href="#ic-book"/></svg>יבוא קובץ הספר</button>
             <input id="fileBook" type="file" accept=".txt,text/plain" hidden />
 
-            <button id="btnNotes" class="primary" title="בחירת קובץ ההערות מהמחשב">📝 יבוא קובץ ההערות</button>
+            <button id="btnNotes" class="primary" title="בחירת קובץ ההערות מהמחשב"><svg class="ic" aria-hidden="true"><use href="#ic-file-text"/></svg>יבוא קובץ ההערות</button>
             <input id="fileNotes" type="file" accept=".txt,text/plain" hidden />
           </div>
 
@@ -1009,7 +1084,7 @@
           </div>
 
           <div class="miniPanel" style="margin-top:14px">
-            <div class="ttl">⚙️ הגדרות</div>
+            <div class="ttl"><svg class="ic" aria-hidden="true"><use href="#ic-settings"/></svg>הגדרות</div>
 
             <div class="miniGrid">
               <div class="fRow">
@@ -1017,7 +1092,7 @@
                 <div class="tagInputWrap">
                   <input id="tagBook" type="text" value="sup" spellcheck="false" autocomplete="off"
                     title="שם תגית HTML לזיהוי (למשל sup) — או ביטוי רגולרי (regex) לזיהוי לפי תבנית טקסט חופשית" />
-                  <span id="tagBookMode" class="tagModeBadge tagModeBadge-tag" title="הזיהוי מתבצע כרגע לפי שם תגית HTML">🏷️ תגית</span>
+                  <span id="tagBookMode" class="tagModeBadge tagModeBadge-tag" title="הזיהוי מתבצע כרגע לפי שם תגית HTML">תגית</span>
                 </div>
                 <p class="tinyHint">אפשר גם ביטוי רגולרי (regex) במקום תגית, למשל: <span class="mono" dir="ltr">\([א-ת"'׳״]{1,3}\**\)</span></p>
               </div>
@@ -1027,7 +1102,7 @@
                 <div class="tagInputWrap">
                   <input id="tagNotes" type="text" value="sup" spellcheck="false" autocomplete="off"
                     title="שם תגית HTML לזיהוי (למשל sup) — או ביטוי רגולרי (regex) לזיהוי לפי תבנית טקסט חופשית" />
-                  <span id="tagNotesMode" class="tagModeBadge tagModeBadge-tag" title="הזיהוי מתבצע כרגע לפי שם תגית HTML">🏷️ תגית</span>
+                  <span id="tagNotesMode" class="tagModeBadge tagModeBadge-tag" title="הזיהוי מתבצע כרגע לפי שם תגית HTML">תגית</span>
                 </div>
                 <p class="tinyHint">אפשר גם ביטוי רגולרי (regex) במקום תגית, למשל: <span class="mono" dir="ltr">\([א-ת"'׳״]{1,3}\**\)</span></p>
               </div>
@@ -1141,7 +1216,7 @@
           </div>
 
           <div class="row center stackOnMobile" style="margin-top:14px">
-            <button id="btnMake" disabled title="הרצת הזיהוי האוטומטי בין הספר להערות ויצירת קובץ הקישורים">⚙️ יצירת ה-JSON</button>
+            <button id="btnMake" disabled title="הרצת הזיהוי האוטומטי בין הספר להערות ויצירת קובץ הקישורים"><svg class="ic" aria-hidden="true"><use href="#ic-settings"/></svg>יצירת ה-JSON</button>
           </div>
 
           <div class="row center" style="margin-top:10px">
@@ -1158,9 +1233,9 @@
         <div class="hd">
           <b>שלב 2 — פלט</b>
           <div class="rightTools">
-            <button id="btnAdvancedEditor" class="ghost" disabled title="פתיחת עורך תלת-טורי לצפייה ותיקון ידני של הקישורים">🧩 פתיחת עורך מתקדם</button>
-            <button id="btnCopy" class="ghost" disabled title="העתקת תוכן ה-JSON ללוח">📋 העתקת JSON</button>
-            <button id="btnDownload" disabled title="הורדת קובץ ה-JSON שנוצר">⬇️ הורדת JSON</button>
+            <button id="btnAdvancedEditor" class="ghost" disabled title="פתיחת עורך תלת-טורי לצפייה ותיקון ידני של הקישורים"><svg class="ic" aria-hidden="true"><use href="#ic-tune"/></svg>פתיחת עורך מתקדם</button>
+            <button id="btnCopy" class="ghost" disabled title="העתקת תוכן ה-JSON ללוח"><svg class="ic" aria-hidden="true"><use href="#ic-clipboard"/></svg>העתקת JSON</button>
+            <button id="btnDownload" disabled title="הורדת קובץ ה-JSON שנוצר"><svg class="ic" aria-hidden="true"><use href="#ic-download"/></svg>הורדת JSON</button>
           </div>
         </div>
         <div class="bd">
@@ -1171,10 +1246,10 @@
       <!-- אזור העורך המתקדם: תצוגה חיה של שלושת הטורים ועריכה ידנית של הקישורים -->
       <section id="advEditor" class="card" style="display:none">
         <div class="hd">
-          <b>🧩 עורך מתקדם — תיקון קישורים ידני</b>
+          <b><svg class="ic" aria-hidden="true"><use href="#ic-tune"/></svg>עורך מתקדם — תיקון קישורים ידני</b>
           <div class="rightTools">
-            <button id="btnAddLink" class="ghost" title="הוספת קישור ריק חדש לעריכה ידנית">➕ קישור חדש</button>
-            <button id="btnResetEditor" class="ghost" title="ביטול כל השינויים הידניים וחזרה לתוצאה האוטומטית האחרונה">🔄 איפוס שינויים</button>
+            <button id="btnAddLink" class="ghost" title="הוספת קישור ריק חדש לעריכה ידנית"><svg class="ic" aria-hidden="true"><use href="#ic-plus"/></svg>קישור חדש</button>
+            <button id="btnResetEditor" class="ghost" title="ביטול כל השינויים הידניים וחזרה לתוצאה האוטומטית האחרונה"><svg class="ic" aria-hidden="true"><use href="#ic-refresh"/></svg>איפוס שינויים</button>
             <button id="btnCloseEditor" class="ghost" title="סגירת העורך המתקדם">✕ סגירה</button>
           </div>
         </div>
@@ -1189,22 +1264,22 @@
           </div>
           <div class="hint" style="text-align:center;margin-bottom:10px">
             <b>ליצירת קישור חדש:</b> לחצו על שורה (מקטע) בטור הספר ואז על שורה בטור ההערות (או להפך).
-            <b>לתיקון קישור קיים:</b> ערכו את מספרי השורות ישירות בטור הקישורים, או לחצו על 🎯 בשורת קישור כדי "להפעיל" אותה ואז לבחור לה שורות חדשות מהטורים.
+            <b>לתיקון קישור קיים:</b> ערכו את מספרי השורות ישירות בטור הקישורים, או לחצו על סמן הבחירה בשורת קישור כדי "להפעיל" אותה ואז לבחור לה שורות חדשות מהטורים.
             <b>למעקב מהיר:</b> לחיצה על שורה שכבר מקושרת מדגישה לרגע בכחול את השורה המקבילה ואת שורת ה-JSON שלה, בלי לפגוע בקישור עצמו.
-            הצ'יפים 📏 טווח ו-📍 עוגן ליד כל קישור ניתנים להפעלה גם יחד: טווח מקשר כמה שורות רצופות, ועוגן-מילה מצמצם את צד הספר למילה אחת או יותר בתוך השורה (ולא כל השורה) מול שורת ההערה השלמה.
-            השתמשו ב"🔄 איפוס שינויים" כדי לבטל את כל העריכות הידניות ולחזור לתוצאה האוטומטית האחרונה.
+            הצ'יפים "טווח" ו"עוגן" ליד כל קישור ניתנים להפעלה גם יחד: טווח מקשר כמה שורות רצופות, ועוגן-מילה מצמצם את צד הספר למילה אחת או יותר בתוך השורה (ולא כל השורה) מול שורת ההערה השלמה.
+            השתמשו ב"איפוס שינויים" כדי לבטל את כל העריכות הידניות ולחזור לתוצאה האוטומטית האחרונה.
           </div>
           <div class="editorGrid">
             <div class="editorCol">
-              <div class="editorColHd">📘 טור הספר (שורות / מקטעים)</div>
+              <div class="editorColHd"><svg class="ic" aria-hidden="true"><use href="#ic-book"/></svg>טור הספר (שורות / מקטעים)</div>
               <div id="editorBookCol" class="editorList"></div>
             </div>
             <div class="editorCol">
-              <div class="editorColHd">📝 טור ההערות (שורות / מקטעים)</div>
+              <div class="editorColHd"><svg class="ic" aria-hidden="true"><use href="#ic-file-text"/></svg>טור ההערות (שורות / מקטעים)</div>
               <div id="editorNotesCol" class="editorList"></div>
             </div>
             <div class="editorCol editorColWide">
-              <div class="editorColHd">🔗 קישורים (JSON)</div>
+              <div class="editorColHd"><svg class="ic" aria-hidden="true"><use href="#ic-link"/></svg>קישורים (JSON)</div>
               <div id="editorLinksCol" class="editorList"></div>
             </div>
           </div>
@@ -1213,7 +1288,7 @@
 
       <!-- פוטר פעולות נוספות -->
       <div class="footerActions">
-        <button id="btnOffline" class="btn-offline" title="הורדת עותק עצמאי של הדף לעבודה ללא חיבור לרשת">💾 הורדת הקובץ לעבודה אופליין</button>
+        <button id="btnOffline" class="btn-offline" title="הורדת עותק עצמאי של הדף לעבודה ללא חיבור לרשת"><svg class="ic" aria-hidden="true"><use href="#ic-save"/></svg>הורדת הקובץ לעבודה אופליין</button>
       </div>
       <div class="footerNote">הורדה זו מורידה ושומרת עותק עדכני ונקי של הדף לשימוש מקומי ללא חיבור לרשת, ללא תוכן JSON שנוצר במסך.</div>
       
@@ -1308,10 +1383,10 @@
 
   /* מערכת לוגים מרוכזת למסוף מפתחים (F12) לבקרה ודיבוג נח */
   const logger = (() => {
-    const ns = "🔗 מקשר הערות אוטומטי";
+    const ns = "מקשר הערות אוטומטי";
     const time = () => new Date().toLocaleTimeString("he-IL", { hour12: false });
 
-    const chip = "padding:2px 8px;border-radius:999px;font-weight:900;letter-spacing:.2px";
+    const chip = "padding:2px 8px;border-radius:var(--radius-full);font-weight:900;letter-spacing:.2px";
     const styles = {
       ns:   `${chip};background:#111827;color:#fff`,
       ok:   `${chip};background:#16a34a;color:#fff`,
@@ -1403,7 +1478,7 @@
     const hasNotes = state.notesText.trim().length > 0;
 
     if (hasBook && hasNotes) {
-      setStatus(els.makeStatus, 'שני הקבצים נטענו - לחצו על "⚙️ יצירת ה-JSON" כדי להתחיל', "ok");
+      setStatus(els.makeStatus, 'שני הקבצים נטענו - לחצו על "יצירת ה-JSON" כדי להתחיל', "ok");
     } else if (hasBook || hasNotes) {
       setStatus(els.makeStatus, `נטען קובץ אחד בלבד - טענו גם את ${hasBook ? "קובץ ההערות" : "קובץ הספר"}`, "");
     } else {
@@ -2627,8 +2702,8 @@
 
     const originalLabel = els.btnMake.textContent;
     els.btnMake.disabled = true;
-    els.btnMake.textContent = "⏳ מעבד...";
-    setStatus(els.makeStatus, "⏳ מעבד ומקשר... (בקבצים גדולים זה עשוי לקחת כמה שניות)", "busy");
+    els.btnMake.textContent = "מעבד…";
+    setStatus(els.makeStatus, "מעבד ומקשר… (בקבצים גדולים זה עשוי לקחת כמה שניות)", "busy");
 
     await yieldToBrowser();
 
@@ -2715,7 +2790,7 @@
     const nextChunk = Math.min(EDITOR_PAGE_SIZE, remaining);
     return `<div class="editorLoadMore">
       <span class="editorLoadMoreHint">מוצגות רק השורות הראשונות מטעמי ביצועים בקבצים גדולים</span>
-      <button type="button" class="${className}Btn" title="טעינת ${nextChunk} שורות נוספות">⬇️ טען עוד ${nextChunk} (נותרו ${remaining})</button>
+      <button type="button" class="${className}Btn" title="טעינת ${nextChunk} שורות נוספות"><svg class="ic sm" aria-hidden="true"><use href="#ic-download"/></svg>טען עוד ${nextChunk} (נותרו ${remaining})</button>
       <button type="button" class="${className}All" title="טעינת כל השורות הנותרות בבת אחת - עלול להאט בקבצים ענקיים">טען הכל</button>
     </div>`;
   }
@@ -2831,7 +2906,7 @@
 
     if (!linksArr.length) {
       els.editorLinksCol.innerHTML =
-        `<div class="editorEmpty">אין עדיין קישורים. לחצו על "➕ קישור חדש", או בחרו שורה (מקטע) בטור הספר ולאחריה בטור ההערות.</div>`;
+        `<div class="editorEmpty">אין עדיין קישורים. לחצו על "קישור חדש", או בחרו שורה (מקטע) בטור הספר ולאחריה בטור ההערות.</div>`;
       return;
     }
 
@@ -2850,7 +2925,7 @@
 
       const extraRangeRow = rangeOn
         ? `<div class="extraRow extraRange">
-            <span class="extraLabel">📏 טווח:</span>
+            <span class="extraLabel"><svg class="ic sm" aria-hidden="true"><use href="#ic-range"/></svg>טווח:</span>
             <span class="liGroup">עד <input type="number" class="liLine1End" data-id="${link._id}" value="${link.line_index_1_end ?? ""}" placeholder="שורה" title="עד שורה (מקטע) בספר — טווח, אופציונלי" /></span>
             <span class="liArrow">↔</span>
             <span class="liGroup">עד <input type="number" class="liLine2End" data-id="${link._id}" value="${link.line_index_2_end ?? ""}" placeholder="שורה" title="עד שורה (מקטע) בהערות — טווח, אופציונלי" /></span>
@@ -2859,7 +2934,7 @@
 
       const extraAnchorRow = anchorOn
         ? `<div class="extraRow extraAnchor">
-            <span class="extraLabel">📍 עוגן (תווים גולמיים בשורת המקור):</span>
+            <span class="extraLabel"><svg class="ic sm" aria-hidden="true"><use href="#ic-word"/></svg>עוגן (תווים גולמיים בשורת המקור):</span>
             <input type="number" class="liAnchorStart" data-id="${link._id}" value="${link.start ?? ""}" placeholder="מ-תו" title="עוגן-מילה: מאיזה תו גולמי בשורת המקור (כולל תגיות)" />
             <span class="extraTo">עד</span>
             <input type="number" class="liAnchorEnd" data-id="${link._id}" value="${link.end ?? ""}" placeholder="עד-תו" title="עוגן-מילה: עד איזה תו גולמי בשורת המקור" />
@@ -2883,10 +2958,10 @@
             </span>
             <select class="liType" data-id="${link._id}" title="סוג הקשר בין הספר להערה">${optionsHtml}</select>
             <span class="liActions">
-              <button type="button" class="liChip liChipRange ${rangeOn ? "on" : ""}" data-id="${link._id}" title="${rangeOn ? "כיבוי טווח (חזרה לקישור שורה בודדת)" : "הפעלת טווח: קישור כמה שורות (מקטעים) רצופים במקום שורה בודדת"}">📏</button>
-              <button type="button" class="liChip liChipAnchor ${anchorOn ? "on" : ""}" data-id="${link._id}" title="${anchorOn ? "כיבוי עוגן-מילה" : "הפעלת עוגן-מילה: קישור מילה אחת או יותר בתוך השורה, ולא את כולה"}">📍</button>
-              <button type="button" class="liPick ${isActive ? "active" : ""}" data-id="${link._id}" title="${isActive ? "כיבוי בחירה מהטורים" : "הפעלת בחירה: לחצו על שורה בספר ואז בהערות כדי לעדכן קישור זה"}">🎯</button>
-              <button type="button" class="liDel" data-id="${link._id}" title="מחיקת קישור זה">🗑</button>
+              <button type="button" class="liChip liChipRange ${rangeOn ? "on" : ""}" data-id="${link._id}" title="${rangeOn ? "כיבוי טווח (חזרה לקישור שורה בודדת)" : "הפעלת טווח: קישור כמה שורות (מקטעים) רצופים במקום שורה בודדת"}"><svg class="ic sm only" aria-hidden="true"><use href="#ic-range"/></svg></button>
+              <button type="button" class="liChip liChipAnchor ${anchorOn ? "on" : ""}" data-id="${link._id}" title="${anchorOn ? "כיבוי עוגן-מילה" : "הפעלת עוגן-מילה: קישור מילה אחת או יותר בתוך השורה, ולא את כולה"}"><svg class="ic sm only" aria-hidden="true"><use href="#ic-word"/></svg></button>
+              <button type="button" class="liPick ${isActive ? "active" : ""}" data-id="${link._id}" title="${isActive ? "כיבוי בחירה מהטורים" : "הפעלת בחירה: לחצו על שורה בספר ואז בהערות כדי לעדכן קישור זה"}"><svg class="ic sm only" aria-hidden="true"><use href="#ic-target"/></svg></button>
+              <button type="button" class="liDel" data-id="${link._id}" title="מחיקת קישור זה"><svg class="ic sm only" aria-hidden="true"><use href="#ic-delete"/></svg></button>
             </span>
           </div>
           ${extraBlock}
@@ -3167,11 +3242,11 @@
     logger.info("שדה קישור עודכן ידנית בעורך המתקדם", { id, field, מ: prevValue ?? null, ל: value ?? null });
 
     if (field === "line_index_1_end" && Number.isInteger(value) && Number.isInteger(link.line_index_1) && value < link.line_index_1) {
-      showToast("⚠️ שורת הסיום בספר קטנה משורת ההתחלה");
+      showToast("שורת הסיום בספר קטנה משורת ההתחלה");
       logger.warn("טווח לא תקין: שורת הסיום בספר קטנה משורת ההתחלה", { id, line_index_1: link.line_index_1, line_index_1_end: value });
     }
     if (field === "line_index_2_end" && Number.isInteger(value) && Number.isInteger(link.line_index_2) && value < link.line_index_2) {
-      showToast("⚠️ שורת הסיום בהערות קטנה משורת ההתחלה");
+      showToast("שורת הסיום בהערות קטנה משורת ההתחלה");
       logger.warn("טווח לא תקין: שורת הסיום בהערות קטנה משורת ההתחלה", { id, line_index_2: link.line_index_2, line_index_2_end: value });
     }
 
@@ -3255,7 +3330,7 @@
   /* פלייסהולדר זמני בשלושת הטורים לפני רינדור כבד, כדי שהמשתמש יראה מיד
      שמשהו קורה במקום מסך ריק/קפוא (במיוחד חשוב בספרים גדולים) */
   function showEditorLoadingPlaceholders() {
-    const placeholder = `<div class="editorEmpty">⏳ טוען עורך מתקדם...</div>`;
+    const placeholder = `<div class="editorEmpty">טוען עורך מתקדם…</div>`;
     if (els.editorBookCol) els.editorBookCol.innerHTML = placeholder;
     if (els.editorNotesCol) els.editorNotesCol.innerHTML = placeholder;
     if (els.editorLinksCol) els.editorLinksCol.innerHTML = placeholder;
@@ -3263,7 +3338,7 @@
 
   function setEditorVisible(show) {
     els.advEditor.style.display = show ? "" : "none";
-    els.btnAdvancedEditor.textContent = show ? "🧩 סגירת עורך מתקדם" : "🧩 עורך מתקדם";
+    els.btnAdvancedEditor.textContent = show ? "סגירת עורך מתקדם" : "עורך מתקדם";
     if (show) renderEditor();
   }
 
@@ -3282,7 +3357,7 @@
 
     els.btnAdvancedEditor.disabled = true;
     const originalLabel = els.btnAdvancedEditor.textContent;
-    els.btnAdvancedEditor.textContent = "⏳ טוען...";
+    els.btnAdvancedEditor.textContent = "טוען…";
     showEditorLoadingPlaceholders();
 
     /* בספר גדול מאוד, רינדור כל שלושת הטורים (גם המקוצרים לעמוד ראשון) עדיין
@@ -3369,7 +3444,7 @@
     const btnAdvancedEditor = clone.querySelector("#btnAdvancedEditor");
     if (btnAdvancedEditor) {
       btnAdvancedEditor.setAttribute("disabled", "disabled");
-      btnAdvancedEditor.textContent = "🧩 עורך מתקדם";
+      btnAdvancedEditor.textContent = "עורך מתקדם";
     }
 
     const advEditor = clone.querySelector("#advEditor");
@@ -3416,20 +3491,20 @@
     logger.ok("הורד עותק אופליין של הדף.", { קובץ: offlineName, מצב: "ללא JSON נטען" });
   }
 
-  /* עדכון תג/תגית חי מול תגית "🏷️ תגית" / "🧩 regex" ליד שדה קלט התג, כדי שהמשתמש
+  /* עדכון תג/תגית חי מול תגית "תגית" / "regex" ליד שדה קלט התג, כדי שהמשתמש
      יראה מיידית איך הקלט שלו מתפרש - עוד לפני לחיצה על "צור JSON" */
   function updateTagModeBadge(inputEl, badgeEl) {
     if (!inputEl || !badgeEl) return;
     const isRegex = isLikelyRegexPattern(inputEl.value);
     if (isRegex) {
-      badgeEl.textContent = "🧩 regex";
+      badgeEl.textContent = "regex";
       badgeEl.className = "tagModeBadge tagModeBadge-regex";
       const check = validateRegexPattern(inputEl.value.trim());
       badgeEl.title = check.ok
         ? "הזיהוי יתבצע לפי הביטוי הרגולרי שהוזן"
         : `ביטוי רגולרי לא תקין: ${check.message}`;
     } else {
-      badgeEl.textContent = "🏷️ תגית";
+      badgeEl.textContent = "תגית";
       badgeEl.className = "tagModeBadge tagModeBadge-tag";
       badgeEl.title = "הזיהוי מתבצע לפי שם תגית HTML";
     }
