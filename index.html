@@ -1060,6 +1060,14 @@
                         <option value="related passage">קטע קשור (related passage)</option>
                         <option value="ein mishpat / ner mitsvah">עין משפט / נר מצווה</option>
                         -->
+                        <!--
+                        linker הוסר: הגנרטור זורק כל רשומה כזו מקובץ קישורים ידני,
+                        לפני שנוצרת שורת link ובלי שום אזהרה. שכבת LINKER מיוצרת
+                        אך ורק ב-Phase-2 של LinkerToOtzaria, מ-sidecar בפורמט TSV.
+                        ראה Otzaria/SeforimLibrary, Generator.kt:2018:
+                            if (declaredType == ConnectionType.LINKER) continue
+                        <option value="linker">אוטומטי (linker)</option>
+                        -->
                         <!-- התוויות העבריות כאן זהות לאלה שאוצריא מציגה בפועל
                              (LinkTypes.hebrewLabels), כדי שמה שנבחר בתפריט יהיה
                              מה שהמשתמש יראה אחר כך בפאנל. -->
@@ -1072,7 +1080,6 @@
                         <option value="mishnah_in_talmud">משנה בתלמוד (mishnah in talmud)</option>
                         <option value="law">פסיקת הלכה (law)</option>
                         <option value="liturgy">תפילה (liturgy)</option>
-                        <option value="linker">אוטומטי (linker)</option>
                         <option value="summary">סיכום (summary)</option>
                         <option value="sifrei_mitzvot">ספרי מצוות (sifrei mitzvot)</option>
                         <option value="essay">מאמר / חיבור (essay)</option>
