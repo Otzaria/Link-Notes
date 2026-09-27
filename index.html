@@ -2448,11 +2448,12 @@
     );
   }
 
-  /* בדיקת שם קובץ ההערות מול הגנרטור של אוצריא.
-     HearotCompanionMerge.isMergeableCompanionTitle: כותרת שמתחילה ב"הערות על "
-     (ולמעט "הערות על חברותא") מוזגה אל תוך ספר הבסיס כהערות שוליים מוטמעות,
-     ולכן אין לה שורת ספר משלה. ב-Generator.kt ספר יעד חסר גורם ל-continue
-     שקט על כל רשומה, כלומר קובץ הקישורים כולו נזרק בלי אזהרה גלויה. */
+  /* שם קובץ הערות בתבנית "הערות על X" (למעט "הערות על חברותא") מפעיל
+     באוצריא מסלול מיוחד: HearotCompanionMerge. הגנרטור קורא את קובץ
+     הקישורים הזה, ולפיו מזריק כל שורת הערה אל תוך שורת הבסיס המתאימה
+     כהערת שוליים מוטמעת (<sup class="footnote-marker"> + <i class="footnote">).
+     הקישורים אינם נזרקים אלא משמשים כמפת המיזוג, ולכן אין כאן בעיה —
+     אבל יש תנאים שמבטלים את המיזוג, והם מה ששווה לבדוק. */
   const MERGED_COMPANION_PREFIX = "הערות על ";
   const MERGED_COMPANION_EXCEPTION = "הערות על חברותא";
 
@@ -2523,24 +2524,51 @@
   }
 
   /* אזהרות שנוגעות לאופן שבו אוצריא תקלוט את הקובץ, להבדיל מתקינות הרשומות. */
-  function reportGeneratorCompatibility({ path2, connectionType, outCount }) {
+  function reportGeneratorCompatibility({ path2, connectionType, outCount, linkGenerationMode, links, noteLines }) {
     if (!outCount) return;
     const notesTitle = notesTitleFromPath(path2);
 
     if (isMergedCompanionTitle(notesTitle)) {
-      setStatus(
-        els.makeStatus,
-        `אזהרה: שם קובץ ההערות "${notesTitle}" מתחיל ב"הערות על ". הגנרטור של אוצריא ממזג קבצים כאלה לתוך ספר הבסיס, ואז כל הקישורים בקובץ נזרקים בשקט. שנו את שם הקובץ.`,
-        "err"
+      /* התנאים שמבטלים את המיזוג, לפי סדר הבדיקה בגנרטור. רק אלה שהכלי
+         יכול לדעת עליהם מתוך מה שנוצר כאן. */
+      const blockers = [];
+      if (linkGenerationMode === "range") blockers.push("נבחר מצב קישור-טווח (ranged companion links)");
+      if (linkGenerationMode === "anchor") blockers.push("נבחר מצב מילה↔שורה (word-anchored links)");
+
+      const linkedNoteLines = new Set(links.map(l => l["line_index_2"]));
+      const unlinked = noteLines.reduce((acc, line, i) => {
+        const text = String(line || "");
+        if (!text.trim()) return acc;
+        if (/^\uFEFF?<h[1-6]/i.test(text)) return acc;
+        return linkedNoteLines.has(i + 1) ? acc : acc + 1;
+      }, 0);
+      if (unlinked > 0) blockers.push(`${unlinked} שורות הערה שאף קישור אינו מצביע אליהן`);
+
+      const badNote = noteLines.find((line, i) =>
+        linkedNoteLines.has(i + 1) && /<i>|<i\s|<\/i>/i.test(String(line || ""))
       );
-      logger.err(
-        `שם קובץ ההערות "${notesTitle}" מזוהה כ"הערות נלוות" שמוזגו לספר הבסיס.`,
-        {
-          הכלל: 'כותרת שמתחילה ב"הערות על " ואינה "הערות על חברותא"',
-          התוצאה: "לספר ההערות אין שורה במסד, והגנרטור מדלג על כל רשומה בקובץ",
-          הפתרון: 'שם שאינו בתבנית "הערות על X" — למשל "הערות ל<שם הספר>"'
-        }
-      );
+      if (badNote !== undefined) blockers.push("שורת הערה מקושרת מכילה תגית <i>");
+
+      if (blockers.length) {
+        setStatus(
+          els.makeStatus,
+          `שם קובץ ההערות "${notesTitle}" מפעיל באוצריא מיזוג להערות שוליים מוטמעות, אבל המיזוג לא יתבצע: ${blockers.join("; ")}. ההערות יישארו ספר נפרד והקישורים יעבדו כרגיל.`,
+          "warn"
+        );
+        logger.warn(
+          `מיזוג ההערות אל ספר הבסיס לא יתבצע עבור "${notesTitle}".`,
+          { מה_מונע: blockers, המשמעות: "ההערות יישארו ספר נפרד, והקישורים ישמשו כקישורים רגילים" }
+        );
+      } else {
+        logger.ok(
+          `"${notesTitle}" יימוזג אל ספר הבסיס כהערות שוליים מוטמעות.`,
+          {
+            הכלל: 'שם בתבנית "הערות על X" (למעט "הערות על חברותא")',
+            מה_קורה: "הגנרטור משתמש בקובץ הזה כמפת מיזוג ומזריק כל הערה לשורת הבסיס שלה",
+            לתשומת_לב: "במצב הזה ההערות אינן ספר נפרד, ולכן לא יופיעו בפאנל המפרשים"
+          }
+        );
+      }
     }
 
     if (supportsPrintedNoteMarkers(connectionType, notesTitle)) {
@@ -2985,7 +3013,14 @@
         דוגמאות: state.exportProblems.slice(0, 10).map(p => `רשומה ${p.index}: ${p.msg}`)
       });
     } else {
-      reportGeneratorCompatibility({ path2, connectionType, outCount: outArr.length });
+      reportGeneratorCompatibility({
+        path2,
+        connectionType,
+        outCount: outArr.length,
+        linkGenerationMode,
+        links: exportArr,
+        noteLines
+      });
     }
 
     els.btnDownload.disabled = (outArr.length === 0);
