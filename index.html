@@ -654,6 +654,14 @@
     }
     @media print{ .themeToggle{display:none} }
 
+    /* טבעת מיקוד. הכללים הממוקדים מבטלים outline ומחליפים אותו בצל חום
+       שקוף שיחס הניגודיות שלו כ-1.1:1 — כלומר בלתי נראה בשני המצבים.
+       הכלל הזה מגיע מ-OtzariaLinker ומשתמש ב---primary, שעובר בשניהם. */
+    :focus-visible{
+      outline:2px solid var(--primary);
+      outline-offset:2px;
+    }
+
     /* אייקוני SVG מוטמעים (ספרייט של OtzariaLinker) — בלי פונט אייקונים
        ובלי בקשת רשת, כדי שהעותק האופליין ייראה זהה. */
     .ic{
@@ -667,6 +675,9 @@
     .ic.lg{width:24px;height:24px;stroke-width:1.7}
     .ic.xl{width:32px;height:32px;stroke-width:1.5}
     .ic.only{margin-inline-end:0}
+
+    /* כפתור שמוריד פלט שהוולידציה סימנה כפגום */
+    button.hasProblems{border-color:var(--error);color:var(--error)}
     /* מכלים שכבר מרווחים בעצמם עם gap — לא להוסיף מרווח כפול */
     :where(button, .ttl, .editorColHd, .extraLabel) > .ic{margin-inline-end:0}
     /* מכלים שנושאים אייקון + טקסט ואינם flex מלכתחילה */
@@ -1187,7 +1198,15 @@
           <li><b>ייבאו את שני הקבצים</b> בעזרת הכפתורים "יבוא קובץ הספר" ו-"יבוא קובץ ההערות" למטה.</li>
           <li><b>לחצו על "יצירת ה-JSON"</b> — הכלי יזהה אוטומטית את ההתאמות בין הספר להערות, ויצור את קובץ הקישורים.</li>
           <li><b>בדקו את התוצאה.</b> אם משהו לא מדויק, פתחו את "עורך מתקדם" כדי לראות את הספר, ההערות והקישורים זה לצד זה, ולתקן במקום שצריך.</li>
-          <li><b>הורידו את קובץ ה-JSON הסופי,</b> הכנסו באוצריא להגדרות > ספרייה > ייבוא דורות וקישורים ובחרו בקובץ ה-JSON.</li>
+          <li><b>הורידו את קובץ ה-JSON הסופי.</b> יש שתי דרכים להכניס אותו לאוצריא, והן לא שקולות:
+            <ul>
+              <li><b>ייבוא בתוכנה</b> (הגדרות &gt; ספרייה &gt; ייבוא דורות וקישורים) — מיידי, אבל מקבל <b>ארבעה סוגי קישור בלבד</b>:
+                <span class="mono" dir="ltr">commentary</span>, <span class="mono" dir="ltr">targum</span>,
+                <span class="mono" dir="ltr">reference</span> ו-<span class="mono" dir="ltr">other</span>.
+                סוג אחר יפסיל את <b>כל</b> הקובץ, והייבוא הוא הכול-או-כלום.</li>
+              <li><b>הוספה לספריית אוצריא עצמה</b> (שליחת הקובץ לתיקיית <span class="mono" dir="ltr">links</span> שבמאגר הספרייה) — נכנס בבנייה הבאה של המסד, ותומך בכל 22 הסוגים, בעוגני-מילה, בטווחים ובמיזוג ההערות.</li>
+            </ul>
+          </li>
         </ol>
         <div class="hint" style="text-align:center;margin-top:10px">
           טיפ למתחילים: לא בטוחים איך בדיוק לסמן את התגיות? כדאי לנסות קודם על דוגמה קטנה של כמה שורות, ולוודא שהתוצאה נראית הגיונית לפני הרצה על ספר שלם.
@@ -1299,6 +1318,9 @@
                   </div>
                   <div class="hint" style="margin-top:6px">
                     בחירה האם ההערות יוצגו בפנאל המפרשים או בפנאל הקישורים.
+                    הייבוא שבתוך התוכנה מקבל רק <span class="mono" dir="ltr">commentary</span>,
+                    <span class="mono" dir="ltr">targum</span>, <span class="mono" dir="ltr">reference</span>
+                    ו-<span class="mono" dir="ltr">other</span>; שאר הסוגים עובדים רק דרך בניית המסד.
                   </div>
                 </div>
 
@@ -1347,8 +1369,8 @@
                     במצב מילה↔שורה — תמיד, בכל סוג קישור.
                     במצב רגיל — רק אם הסימון בספר הוא <span class="mono" dir="ltr">(9)</span> או
                     <span class="mono" dir="ltr">&lt;sup&gt;(א)&lt;/sup&gt;</span> (בסוגריים),
-                    שורת ההערה נפתחת באותו סימון, וסוג הקישור הוא
-                    <span class="mono" dir="ltr">footnotes</span>.
+                    שורת ההערה נפתחת באותו סימון, והסוג הוא
+                    <span class="mono" dir="ltr">footnotes</span> או ששם קובץ ההערות מתחיל ב"הערות".
                   </div>
                 </div>
               </div>
@@ -1356,7 +1378,7 @@
           </div>
 
           <div class="row center stackOnMobile" style="margin-top:14px">
-            <button id="btnMake" disabled title="הרצת הזיהוי האוטומטי בין הספר להערות ויצירת קובץ הקישורים"><svg class="ic" aria-hidden="true"><use href="#ic-settings"/></svg>יצירת ה-JSON</button>
+            <button id="btnMake" disabled title="הרצת הזיהוי האוטומטי בין הספר להערות ויצירת קובץ הקישורים"><svg class="ic" aria-hidden="true"><use href="#ic-settings"/></svg><span class="btnLabel">יצירת ה-JSON</span></button>
           </div>
 
           <div class="row center" style="margin-top:10px">
@@ -1373,7 +1395,7 @@
         <div class="hd">
           <b>שלב 2 — פלט</b>
           <div class="rightTools">
-            <button id="btnAdvancedEditor" class="ghost" disabled title="פתיחת עורך תלת-טורי לצפייה ותיקון ידני של הקישורים"><svg class="ic" aria-hidden="true"><use href="#ic-tune"/></svg>פתיחת עורך מתקדם</button>
+            <button id="btnAdvancedEditor" class="ghost" disabled title="פתיחת עורך תלת-טורי לצפייה ותיקון ידני של הקישורים"><svg class="ic" aria-hidden="true"><use href="#ic-tune"/></svg><span class="btnLabel">פתיחת עורך מתקדם</span></button>
             <button id="btnCopy" class="ghost" disabled title="העתקת תוכן ה-JSON ללוח"><svg class="ic" aria-hidden="true"><use href="#ic-clipboard"/></svg>העתקת JSON</button>
             <button id="btnDownload" disabled title="הורדת קובץ ה-JSON שנוצר"><svg class="ic" aria-hidden="true"><use href="#ic-download"/></svg>הורדת JSON</button>
           </div>
@@ -1617,6 +1639,20 @@
   })();
 
   /* חלק 2: פונקציות עזר כלליות לממשק ולטקסט */
+  /* החלפת תווית של כפתור נושא-אייקון. textContent על הכפתור עצמו היה מוחק
+     את תגית ה-svg הפנימית — באג שנולד כשהאימוג'ים הוחלפו בספרייט. */
+  function buttonLabel(btn) {
+    const span = btn && btn.querySelector(".btnLabel");
+    return span ? span.textContent : (btn ? btn.textContent : "");
+  }
+
+  function setButtonLabel(btn, text) {
+    if (!btn) return;
+    const span = btn.querySelector(".btnLabel");
+    if (span) span.textContent = text;
+    else btn.textContent = text;
+  }
+
   function setStatus(rootEl, text, cls) {
     rootEl.className = "status" + (cls ? (" " + cls) : "");
     const spanText = rootEl.querySelector("span:last-child");
@@ -1728,6 +1764,27 @@
     });
 
     return out;
+  }
+
+  /* FileReader.readAsText מסיר BOM של UTF-8 בשקט (אלגוריתם הפענוח של
+     WHATWG), ולכן האופסטים שהכלי מחשב הם על טקסט בלי BOM. הגנרטור, לעומת
+     זאת, קורא עם Charsets.UTF_8 ש*אינו* מסיר BOM, ו-countVisibleChars סופר
+     אותו כתו נראה לכל דבר. התוצאה: עוגן בשורה הראשונה של קובץ עם BOM יוסט
+     בתו אחד. כאן רק מזהים את המצב כדי להזהיר. */
+  function fileStartsWithBom(file) {
+    return new Promise(resolve => {
+      try {
+        const fr = new FileReader();
+        fr.onload = () => {
+          const b = new Uint8Array(fr.result);
+          resolve(b.length >= 3 && b[0] === 0xef && b[1] === 0xbb && b[2] === 0xbf);
+        };
+        fr.onerror = () => resolve(false);
+        fr.readAsArrayBuffer(file.slice(0, 3));
+      } catch (e) {
+        resolve(false);
+      }
+    });
   }
 
   function readFileAsText(file) {
@@ -2465,9 +2522,35 @@
     return (dot > 0 ? last.slice(0, dot) : last).trim();
   }
 
+  /* הגנרטור מנרמל כותרות ספרים דרך normalizeHebrewLabel: גרשיים ASCII
+     הופכים ל-״ וגרש בודד ל-׳, והמפה booksByTitle ממופתחת בערך המנורמל.
+     אבל חיפוש ספר המקור נעשה על שם הקובץ הגולמי
+     (Generator.kt:1837 ואז 1952), ו-path_2 נפתר גם הוא גולמית.
+     לכן שם עם גרשיים ASCII פשוט לא יימצא, וכל הקובץ יחזיר 0 קישורים. */
+  function hasAsciiQuotes(title) {
+    return /["'`]/.test(String(title || ""));
+  }
+
+  function toHebrewQuotes(title) {
+    return String(title || "").replace(/"/g, "״").replace(/['`]/g, "׳");
+  }
+
   function isMergedCompanionTitle(title) {
     const t = String(title || "");
     return t.startsWith(MERGED_COMPANION_PREFIX) && !t.startsWith(MERGED_COMPANION_EXCEPTION);
+  }
+
+  /* מסלול הייבוא בתוכנה (user_content_import) מאמת סוגים מול
+     kHebrewConnectionTypes — חמישה ערכים בלבד, שמתוכם ארבעה מופיעים בתפריט
+     כאן. וחשוב מכך, הייבוא אטומי: user_content_importer.dart:178-180 עושה
+     "if (errors.isNotEmpty) return" לפני כל כתיבה, כלומר שורה אחת עם סוג
+     לא מוכר מפילה את ייבוא כל הקובץ. */
+  const IMPORT_SAFE_TYPES = new Set(["commentary", "targum", "reference", "other"]);
+
+  function isImportSafeType(connectionType) {
+    return IMPORT_SAFE_TYPES.has(
+      String(connectionType || "").trim().toLowerCase().replace(/\s+/g, "_")
+    );
   }
 
   /* האם יזוהו סמני הערה מודפסים בגוף הספר, כך שריחוף עליהם יפתח חלונית.
@@ -2482,7 +2565,7 @@
      (decodeFromString<List<LinkData>>), וארבעת השדות מוגדרים שם ללא ברירת
      מחדל — ולכן רשומה פגומה אחת מפילה את פענוח הקובץ כולו ומחזירה רשימה
      ריקה עם אזהרה יחידה. עדיף לתפוס את זה כאן. */
-  function validateLinksForExport(links) {
+  function validateLinksForExport(links, bookLineCount, noteLineCount) {
     const problems = [];
     const add = (i, msg) => {
       if (problems.length < 200) problems.push({ index: i + 1, msg });
@@ -2505,6 +2588,14 @@
       if (typeof link["Conection Type"] !== "string") {
         add(i, "Conection Type אינו מחרוזת");
       }
+      /* אינדקס שחורג מאורך הקובץ נבלע בגנרטור: getLineIdCached מחזיר null
+         ואז continue, בלי אף שורת לוג. עדיף לתפוס כאן. */
+      if (Number.isInteger(bookLineCount) && link["line_index_1"] > bookLineCount) {
+        add(i, `line_index_1 (${link["line_index_1"]}) חורג ממספר השורות בספר (${bookLineCount})`);
+      }
+      if (Number.isInteger(noteLineCount) && link["line_index_2"] > noteLineCount) {
+        add(i, `line_index_2 (${link["line_index_2"]}) חורג ממספר השורות בהערות (${noteLineCount})`);
+      }
 
       const s = link.start, e = link.end;
       if (s !== undefined || e !== undefined) {
@@ -2524,9 +2615,46 @@
   }
 
   /* אזהרות שנוגעות לאופן שבו אוצריא תקלוט את הקובץ, להבדיל מתקינות הרשומות. */
-  function reportGeneratorCompatibility({ path2, connectionType, outCount, linkGenerationMode, links, noteLines }) {
+  /* הצגת תוצאת הוולידציה. נקראת גם אחרי היצירה וגם אחרי כל עריכה ידנית. */
+  function reportExportProblems() {
+    const problems = state.exportProblems || [];
+    els.btnDownload.classList.toggle("hasProblems", problems.length > 0);
+    els.btnCopy.classList.toggle("hasProblems", problems.length > 0);
+    if (!problems.length) return;
+
+    const records = new Set(problems.map(p => p.index)).size;
+    const capped = problems.length >= 200 ? " (הרשימה נקטעה)" : "";
+    setStatus(
+      els.makeStatus,
+      `${records === 1 ? "רשומה אחת פגומה" : `${records} רשומות פגומות`} ב-JSON${capped}. רשומה פגומה אחת מפילה את פענוח הקובץ כולו באוצריא — ראו את יומן האבחון.`,
+      "err"
+    );
+    logger.err(`ולידציה לפני ייצוא: ${problems.length} בעיות ב-${records} רשומות.`, {
+      דוגמאות: problems.slice(0, 10).map(p => `רשומה ${p.index}: ${p.msg}`)
+    });
+  }
+
+  function reportGeneratorCompatibility({ path2, connectionType, outCount, linkGenerationMode, links, noteLines, bookBaseName, bookHasBom }) {
     if (!outCount) return;
     const notesTitle = notesTitleFromPath(path2);
+
+    /* גרשיים ASCII בשם הספר או בשם קובץ ההערות */
+    const quoted = [
+      hasAsciiQuotes(bookBaseName) ? `שם הספר "${bookBaseName}" → "${toHebrewQuotes(bookBaseName)}"` : null,
+      hasAsciiQuotes(notesTitle) ? `שם קובץ ההערות "${notesTitle}" → "${toHebrewQuotes(notesTitle)}"` : null
+    ].filter(Boolean);
+    if (quoted.length) {
+      setStatus(
+        els.makeStatus,
+        `אזהרה: יש גרשיים רגילים בשם. אוצריא מנרמלת כותרות ל-״ ו-׳, אבל מחפשת את הספר לפי השם הגולמי — ולכן ייתכן שלא תמצא אותו וכל הקישורים יאבדו. ${quoted.join("; ")}`,
+        "err"
+      );
+      logger.err("גרשיים ASCII בשם הספר או בקובץ ההערות.", {
+        הכלל: 'normalizeHebrewLabel ממיר " ל-״ ו-\' ל-׳, אך חיפוש הספר נעשה על השם הגולמי',
+        התוצאה: '"Source book not found for links" — הקובץ כולו מחזיר 0 קישורים',
+        הפתרון: quoted
+      });
+    }
 
     if (isMergedCompanionTitle(notesTitle)) {
       /* התנאים שמבטלים את המיזוג, לפי סדר הבדיקה בגנרטור. רק אלה שהכלי
@@ -2542,12 +2670,25 @@
         if (/^\uFEFF?<h[1-6]/i.test(text)) return acc;
         return linkedNoteLines.has(i + 1) ? acc : acc + 1;
       }, 0);
-      if (unlinked > 0) blockers.push(`${unlinked} שורות הערה שאף קישור אינו מצביע אליהן`);
+      if (unlinked > 0) {
+        blockers.push(
+          `${unlinked === 1 ? "שורת הערה אחת שאף קישור אינו מצביע אליה" : `${unlinked} שורות הערה שאף קישור אינו מצביע אליהן`} (גם שורת המשך של הערה ארוכה נחשבת)`
+        );
+      }
 
       const badNote = noteLines.find((line, i) =>
         linkedNoteLines.has(i + 1) && /<i>|<i\s|<\/i>/i.test(String(line || ""))
       );
       if (badNote !== undefined) blockers.push("שורת הערה מקושרת מכילה תגית <i>");
+
+      /* כותרות שאינן מקושרות אינן נספרות כ"שורה לא מקושרת" ולכן אינן מונעות
+         את המיזוג — אבל ספר ההערות מדוכא מייבוא, והטקסט שלהן לא מוזרק לשום
+         מקום. התוצאה היא אובדן שקט של כותרות הפרקים בקובץ ההערות. */
+      const lostHeadings = noteLines.reduce((acc, line, i) => {
+        const text = String(line || "");
+        if (!/^\uFEFF?<h[1-6]/i.test(text)) return acc;
+        return linkedNoteLines.has(i + 1) ? acc : acc + 1;
+      }, 0);
 
       if (blockers.length) {
         setStatus(
@@ -2568,7 +2709,46 @@
             לתשומת_לב: "במצב הזה ההערות אינן ספר נפרד, ולכן לא יופיעו בפאנל המפרשים"
           }
         );
+        if (lostHeadings > 0) {
+          setStatus(
+            els.makeStatus,
+            `שימו לב: ${lostHeadings} שורות כותרת בקובץ ההערות אינן מקושרות. במיזוג הן אינן מוזרקות לשום מקום וספר ההערות אינו מיובא — הטקסט שלהן יאבד.`,
+            "warn"
+          );
+          logger.warn(`${lostHeadings} שורות כותרת בקובץ ההערות יאבדו במיזוג.`, {
+            הסיבה: "כותרת שאינה מקושרת אינה נספרת כשורה לא-מקושרת ולכן אינה מונעת את המיזוג",
+            התוצאה: "ספר ההערות מדוכא מייבוא, והכותרות אינן מוזרקות לספר הבסיס"
+          });
+        }
       }
+    }
+
+    /* עוגן בשורה הראשונה של ספר עם BOM */
+    if (bookHasBom && linkGenerationMode === "anchor") {
+      const onFirstLine = links.filter(l => l["line_index_1"] === 1 && l.start !== undefined).length;
+      if (onFirstLine > 0) {
+        setStatus(
+          els.makeStatus,
+          `שימו לב: קובץ הספר מתחיל ב-BOM, ו-${onFirstLine} עוגנים יושבים בשורה הראשונה. אוצריא סופרת את ה-BOM כתו, ולכן העוגנים האלה יוסטו בתו אחד. כדאי לשמור את קובץ הספר בלי BOM.`,
+          "warn"
+        );
+        logger.warn("BOM בקובץ הספר מסיט עוגנים בשורה הראשונה.", {
+          הסיבה: "FileReader מסיר BOM, אבל countVisibleChars בגנרטור סופר אותו כתו נראה",
+          עוגנים_מושפעים: onFirstLine,
+          הפתרון: "שמירת קובץ הספר בקידוד UTF-8 ללא BOM"
+        });
+      }
+    }
+
+    if (!isImportSafeType(connectionType)) {
+      logger.warn(
+        `הסוג "${connectionType || "(ריק)"}" אינו נתמך בייבוא שבתוך התוכנה.`,
+        {
+          הסיבה: "מסלול הייבוא מכיר רק פירוש/תרגום/הפניה/מקור/אחר, והוא אטומי — שורה אחת פוסלת את כל הקובץ",
+          נתמכים_בייבוא: "commentary, targum, reference, other",
+          המסלול_שכן_תומך: "הוספת הקובץ לתיקיית links שבמאגר הספרייה, שנכנסת בבניית המסד"
+        }
+      );
     }
 
     if (supportsPrintedNoteMarkers(connectionType, notesTitle)) {
@@ -2756,6 +2936,7 @@
     try {
       state.bookText = await readFileAsText(f);
       state.bookBaseName = safeFileStem(f.name);
+      state.bookHasBom = await fileStartsWithBom(f);
 
       setStatus(els.bookStatus, `ספר: נטען (${f.name})`, "ok");
       showToast("קובץ הספר נטען");
@@ -2949,7 +3130,7 @@
     state.lastJsonText = JSON.stringify(exportArr, null, 2);
     els.out.textContent = state.lastJsonText;
 
-    state.exportProblems = validateLinksForExport(exportArr);
+    state.exportProblems = validateLinksForExport(exportArr, bookLines.length, noteLines.length);
 
     /* בניית מצב העורך המתקדם (שלושת הטורים החיים) מחדש מהתוצאה הנוכחית */
     let nextId = 1;
@@ -3004,14 +3185,7 @@
     });
 
     if (state.exportProblems.length) {
-      setStatus(
-        els.makeStatus,
-        `נמצאו ${state.exportProblems.length} רשומות פגומות ב-JSON. רשומה פגומה אחת מפילה את פענוח הקובץ כולו באוצריא — ראו את יומן האבחון.`,
-        "err"
-      );
-      logger.err(`ולידציה לפני ייצוא: ${state.exportProblems.length} בעיות.`, {
-        דוגמאות: state.exportProblems.slice(0, 10).map(p => `רשומה ${p.index}: ${p.msg}`)
-      });
+      reportExportProblems();
     } else {
       reportGeneratorCompatibility({
         path2,
@@ -3019,7 +3193,9 @@
         outCount: outArr.length,
         linkGenerationMode,
         links: exportArr,
-        noteLines
+        noteLines,
+        bookBaseName: state.bookBaseName,
+        bookHasBom: state.bookHasBom
       });
     }
 
@@ -3042,9 +3218,9 @@
       if (!proceed) return;
     }
 
-    const originalLabel = els.btnMake.textContent;
+    const originalLabel = buttonLabel(els.btnMake);
     els.btnMake.disabled = true;
-    els.btnMake.textContent = "מעבד…";
+    setButtonLabel(els.btnMake, "מעבד…");
     setStatus(els.makeStatus, "מעבד ומקשר… (בקבצים גדולים זה עשוי לקחת כמה שניות)", "busy");
 
     await yieldToBrowser();
@@ -3052,7 +3228,7 @@
     try {
       makeJsonCore();
     } finally {
-      els.btnMake.textContent = originalLabel;
+      setButtonLabel(els.btnMake, originalLabel);
       updateButtons();
     }
   }
@@ -3666,6 +3842,16 @@
     els.out.textContent = state.lastJsonText;
     els.btnDownload.disabled = cleanArr.length === 0;
     els.btnCopy.disabled = cleanArr.length === 0;
+
+    /* עריכה ידנית יכולה לייצר שורה חסרה או אינדקס לא חוקי, ורשומה פגומה אחת
+       מפילה את פענוח הקובץ כולו באוצריא. לכן מריצים את אותה ולידציה שרצה
+       אחרי היצירה האוטומטית, ולא מסתפקים בזו שרצה פעם אחת. */
+    state.exportProblems = validateLinksForExport(
+      cleanArr,
+      state.editor.bookLines ? state.editor.bookLines.length : null,
+      state.editor.noteLines ? state.editor.noteLines.length : null
+    );
+    reportExportProblems();
     renderEditor();
   }
 
@@ -3680,7 +3866,7 @@
 
   function setEditorVisible(show) {
     els.advEditor.style.display = show ? "" : "none";
-    els.btnAdvancedEditor.textContent = show ? "סגירת עורך מתקדם" : "עורך מתקדם";
+    setButtonLabel(els.btnAdvancedEditor, show ? "סגירת עורך מתקדם" : "פתיחת עורך מתקדם");
     if (show) renderEditor();
   }
 
@@ -3698,8 +3884,8 @@
     }
 
     els.btnAdvancedEditor.disabled = true;
-    const originalLabel = els.btnAdvancedEditor.textContent;
-    els.btnAdvancedEditor.textContent = "טוען…";
+    const originalLabel = buttonLabel(els.btnAdvancedEditor);
+    setButtonLabel(els.btnAdvancedEditor, "טוען…");
     showEditorLoadingPlaceholders();
 
     /* בספר גדול מאוד, רינדור כל שלושת הטורים (גם המקוצרים לעמוד ראשון) עדיין
@@ -3712,7 +3898,7 @@
          עשתה כלום. scrollIntoView נקרא אחרי הרינדור כדי שהגובה כבר סופי. */
       els.advEditor.scrollIntoView({ block: "start", behavior: "smooth" });
     } finally {
-      if (els.advEditor.style.display === "none") els.btnAdvancedEditor.textContent = originalLabel;
+      if (els.advEditor.style.display === "none") setButtonLabel(els.btnAdvancedEditor, originalLabel);
       updateButtons();
     }
   }
@@ -3789,7 +3975,8 @@
     const btnAdvancedEditor = clone.querySelector("#btnAdvancedEditor");
     if (btnAdvancedEditor) {
       btnAdvancedEditor.setAttribute("disabled", "disabled");
-      btnAdvancedEditor.textContent = "עורך מתקדם";
+      const advLabel = btnAdvancedEditor.querySelector(".btnLabel");
+      if (advLabel) advLabel.textContent = "פתיחת עורך מתקדם";
     }
 
     const advEditor = clone.querySelector("#advEditor");
@@ -3822,6 +4009,12 @@
        לפי localStorage או העדפת המערכת, ותכונה מקובעת הייתה רק גורמת להבהוב
        של ערכה אחת לפני שהאחרת נכנסת. */
     clone.removeAttribute("data-theme");
+
+    /* העותק חייב לעבוד בלי רשת. גיליון הפונט של Google חוסם רינדור, ובלי
+       חיבור הדפדפן ממתין לטיים-אאוט לפני הציור. שרשרת ה-fallback ב-
+       --font-book מכסה את הכותרות. */
+    clone.querySelectorAll('link[href*="fonts.googleapis.com"], link[href*="fonts.gstatic.com"]')
+      .forEach(node => node.remove());
 
     return "<!doctype html>\n" + clone.outerHTML;
   }
