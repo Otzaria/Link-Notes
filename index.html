@@ -62,6 +62,10 @@
       --highlight:#fde047;              --on-highlight:#111827;
       --code-bg:#241f19;                --code-fg:#f2e9dd;
       --dot-idle:#d1d5db;
+      /* בלי ההצהרה הזאת הדפדפן מרנדר פקדים מקומיים, רשימות <option>,
+         פס גלילה וסמן טקסט בצבעי ברירת מחדל בהירים גם במצב כהה — ומכאן
+         טקסט שחור על רקע כהה. */
+      color-scheme:light;
       --font-ui:"Segoe UI",Roboto,"Helvetica Neue",Arial,"Noto Sans Hebrew",sans-serif;
       --font-book:"Frank Ruhl Libre","FrankRuehl CLM","Taamey Frank CLM",David,
                   "Noto Serif Hebrew",Georgia,"Times New Roman",serif;
@@ -272,6 +276,16 @@
       gap:10px;
       flex-wrap:wrap;
       align-items:center;
+    }
+
+    /* ברירת מחדל אחת לכל פקדי הטקסט. כמה כללים ממוקדים קבעו רקע בלי צבע
+       טקסט (למשל .linkRow select), ואז צבע ברירת המחדל של הדפדפן נשאר שחור
+       ונבלע ברקע הכהה. הכלל הזה מוקדם בגיליון בכוונה, כדי שכללים ממוקדים
+       יוכלו לדרוס אותו. */
+    input[type="text"], input[type="number"], input[type="search"],
+    select, textarea{
+      background:var(--surface-container-lowest);
+      color:var(--text);
     }
 
     input[type="text"]{
@@ -546,6 +560,7 @@
        נגזרים מהם, ולכן אין צורך לשכפל אף כלל. הערכים זהים ל-OtzariaLinker,
        שנגזרו מ-AppSurfaces של אוצריא (panelBackground כהה = שחור). ===== */
     :root[data-theme="dark"]{
+      color-scheme:dark;
       --primary:#f4bd6f;                --on-primary:#452b00;
       --primary-container:#633f00;      --on-primary-container:#ffddb3;
       --secondary:#ddc2a1;              --on-secondary:#3e2d16;
@@ -584,6 +599,7 @@
     /* ברירת מחדל לפי העדפת המערכת, אלא אם המשתמש בחר מפורשות מצב בהיר */
     @media (prefers-color-scheme: dark){
       :root:not([data-theme="light"]){
+        color-scheme:dark;
         --primary:#f4bd6f;                --on-primary:#452b00;
         --primary-container:#633f00;      --on-primary-container:#ffddb3;
         --secondary:#ddc2a1;              --on-secondary:#3e2d16;
@@ -3657,6 +3673,9 @@
 
     try {
       setEditorVisible(true);
+      /* העורך נפתח הרחק מתחת לכפתור, ובלי גלילה נראה היה כאילו הלחיצה לא
+         עשתה כלום. scrollIntoView נקרא אחרי הרינדור כדי שהגובה כבר סופי. */
+      els.advEditor.scrollIntoView({ block: "start", behavior: "smooth" });
     } finally {
       if (els.advEditor.style.display === "none") els.btnAdvancedEditor.textContent = originalLabel;
       updateButtons();
