@@ -1326,6 +1326,14 @@
                   <div class="hint" style="text-align:center;margin-top:8px">
                     ניתן גם לשנות טווח (עד שורה) עבור כל קישור בנפרד בעורך המתקדם, ללא קשר לבחירה כאן.
                   </div>
+                  <div class="hint" style="text-align:center;margin-top:8px">
+                    <b>מתי מופיע פופאפ בגוף הספר?</b>
+                    במצב מילה↔שורה — תמיד, בכל סוג קישור.
+                    במצב רגיל — רק אם הסימון בספר הוא <span class="mono" dir="ltr">(9)</span> או
+                    <span class="mono" dir="ltr">&lt;sup&gt;(א)&lt;/sup&gt;</span> (בסוגריים),
+                    שורת ההערה נפתחת באותו סימון, וסוג הקישור הוא
+                    <span class="mono" dir="ltr">footnotes</span>.
+                  </div>
                 </div>
               </div>
             </details>
@@ -2424,6 +2432,116 @@
     );
   }
 
+  /* בדיקת שם קובץ ההערות מול הגנרטור של אוצריא.
+     HearotCompanionMerge.isMergeableCompanionTitle: כותרת שמתחילה ב"הערות על "
+     (ולמעט "הערות על חברותא") מוזגה אל תוך ספר הבסיס כהערות שוליים מוטמעות,
+     ולכן אין לה שורת ספר משלה. ב-Generator.kt ספר יעד חסר גורם ל-continue
+     שקט על כל רשומה, כלומר קובץ הקישורים כולו נזרק בלי אזהרה גלויה. */
+  const MERGED_COMPANION_PREFIX = "הערות על ";
+  const MERGED_COMPANION_EXCEPTION = "הערות על חברותא";
+
+  function notesTitleFromPath(path2) {
+    const raw = String(path2 || "").trim();
+    if (!raw) return "";
+    const last = raw.split(/[\\/]/).pop();
+    const dot = last.lastIndexOf(".");
+    return (dot > 0 ? last.slice(0, dot) : last).trim();
+  }
+
+  function isMergedCompanionTitle(title) {
+    const t = String(title || "");
+    return t.startsWith(MERGED_COMPANION_PREFIX) && !t.startsWith(MERGED_COMPANION_EXCEPTION);
+  }
+
+  /* האם יזוהו סמני הערה מודפסים בגוף הספר, כך שריחוף עליהם יפתח חלונית.
+     numbered_note_markers.dart דורש סוג תלוי-טקסט, וגם FOOTNOTES או כותרת
+     יעד שמתחילה ב"הערות". */
+  function supportsPrintedNoteMarkers(connectionType, notesTitle) {
+    const type = String(connectionType || "").trim().toLowerCase().replace(/\s+/g, "_");
+    return type === "footnotes" || String(notesTitle || "").startsWith("הערות");
+  }
+
+  /* ולידציה של הרשומות לפני הייצוא. הגנרטור מפענח את הקובץ כמערך אחד
+     (decodeFromString<List<LinkData>>), וארבעת השדות מוגדרים שם ללא ברירת
+     מחדל — ולכן רשומה פגומה אחת מפילה את פענוח הקובץ כולו ומחזירה רשימה
+     ריקה עם אזהרה יחידה. עדיף לתפוס את זה כאן. */
+  function validateLinksForExport(links) {
+    const problems = [];
+    const add = (i, msg) => {
+      if (problems.length < 200) problems.push({ index: i + 1, msg });
+    };
+    const isPosInt = v => Number.isInteger(v) && v >= 1;
+
+    links.forEach((link, i) => {
+      if (typeof link["heRef_2"] !== "string" || !link["heRef_2"].trim()) {
+        add(i, "heRef_2 חסר או ריק");
+      }
+      if (typeof link["path_2"] !== "string" || !link["path_2"].trim()) {
+        add(i, "path_2 חסר או ריק");
+      }
+      if (!isPosInt(link["line_index_1"])) {
+        add(i, `line_index_1 אינו מספר שלם חיובי (${JSON.stringify(link["line_index_1"])})`);
+      }
+      if (!isPosInt(link["line_index_2"])) {
+        add(i, `line_index_2 אינו מספר שלם חיובי (${JSON.stringify(link["line_index_2"])})`);
+      }
+      if (typeof link["Conection Type"] !== "string") {
+        add(i, "Conection Type אינו מחרוזת");
+      }
+
+      const s = link.start, e = link.end;
+      if (s !== undefined || e !== undefined) {
+        if (!Number.isInteger(s) || s < 0) add(i, "start אינו מספר שלם אי-שלילי");
+        else if (!Number.isInteger(e) || e <= s) add(i, "end חייב להיות מספר שלם גדול מ-start");
+      }
+      const e1 = link["line_index_1_end"], e2 = link["line_index_2_end"];
+      if (e1 !== undefined && (!isPosInt(e1) || e1 < link["line_index_1"])) {
+        add(i, "line_index_1_end קטן מ-line_index_1 או אינו מספר שלם חיובי");
+      }
+      if (e2 !== undefined && (!isPosInt(e2) || e2 < link["line_index_2"])) {
+        add(i, "line_index_2_end קטן מ-line_index_2 או אינו מספר שלם חיובי");
+      }
+    });
+
+    return problems;
+  }
+
+  /* אזהרות שנוגעות לאופן שבו אוצריא תקלוט את הקובץ, להבדיל מתקינות הרשומות. */
+  function reportGeneratorCompatibility({ path2, connectionType, outCount }) {
+    if (!outCount) return;
+    const notesTitle = notesTitleFromPath(path2);
+
+    if (isMergedCompanionTitle(notesTitle)) {
+      setStatus(
+        els.makeStatus,
+        `אזהרה: שם קובץ ההערות "${notesTitle}" מתחיל ב"הערות על ". הגנרטור של אוצריא ממזג קבצים כאלה לתוך ספר הבסיס, ואז כל הקישורים בקובץ נזרקים בשקט. שנו את שם הקובץ.`,
+        "err"
+      );
+      logger.err(
+        `שם קובץ ההערות "${notesTitle}" מזוהה כ"הערות נלוות" שמוזגו לספר הבסיס.`,
+        {
+          הכלל: 'כותרת שמתחילה ב"הערות על " ואינה "הערות על חברותא"',
+          התוצאה: "לספר ההערות אין שורה במסד, והגנרטור מדלג על כל רשומה בקובץ",
+          הפתרון: 'שם שאינו בתבנית "הערות על X" — למשל "הערות ל<שם הספר>"'
+        }
+      );
+    }
+
+    if (supportsPrintedNoteMarkers(connectionType, notesTitle)) {
+      logger.ok("סמני הערה מודפסים בגוף הספר יקבלו חלונית בריחוף.", {
+        הדרישה: 'סימון בסוגריים — (9) או <sup>(א)</sup> — ושורת ההערה נפתחת באותו סימון'
+      });
+    } else {
+      logger.warn(
+        "לא יהיו חלוניות על סמני ההערות המודפסים (אלא אם נבחר מצב מילה↔שורה).",
+        {
+          הדרישה: 'סוג הקישור "footnotes", או שם קובץ הערות שמתחיל ב"הערות"',
+          הסוג_שנבחר: connectionType || "(ריק)"
+        }
+      );
+    }
+  }
+
   function reportLinkingResult(info) {
     const {
       outCount,
@@ -2783,8 +2901,11 @@
       linkGenerationMode
     });
 
-    state.lastJsonText = JSON.stringify(outArr.map(cleanLinkForExport), null, 2);
+    const exportArr = outArr.map(cleanLinkForExport);
+    state.lastJsonText = JSON.stringify(exportArr, null, 2);
     els.out.textContent = state.lastJsonText;
+
+    state.exportProblems = validateLinksForExport(exportArr);
 
     /* בניית מצב העורך המתקדם (שלושת הטורים החיים) מחדש מהתוצאה הנוכחית */
     let nextId = 1;
@@ -2837,6 +2958,19 @@
       anchorCount,
       rangeCount
     });
+
+    if (state.exportProblems.length) {
+      setStatus(
+        els.makeStatus,
+        `נמצאו ${state.exportProblems.length} רשומות פגומות ב-JSON. רשומה פגומה אחת מפילה את פענוח הקובץ כולו באוצריא — ראו את יומן האבחון.`,
+        "err"
+      );
+      logger.err(`ולידציה לפני ייצוא: ${state.exportProblems.length} בעיות.`, {
+        דוגמאות: state.exportProblems.slice(0, 10).map(p => `רשומה ${p.index}: ${p.msg}`)
+      });
+    } else {
+      reportGeneratorCompatibility({ path2, connectionType, outCount: outArr.length });
+    }
 
     els.btnDownload.disabled = (outArr.length === 0);
     els.btnCopy.disabled = (outArr.length === 0);
