@@ -23,9 +23,7 @@
     */
     :root{
       /* פלטת הצבעים מותאמת לשפת העיצוב של otzaria.org (חם, גווני חום-קרם) */
-      /* ===== M3 color roles — זהים ל-OtzariaLinker, שנגזרו מ-AppTokens
-         ו-AppSurfaces של אוצריא. זהו מקור האמת; הטוקנים הישנים שמתחת
-         הם כינויים בלבד, כדי ששאר הגיליון ימשיך לעבוד. ===== */
+      /* ===== M3 color roles — זהים ל-OtzariaLinker; הטוקנים הישנים שמתחת הם כינויים ===== */
       --primary:#805610;                --on-primary:#ffffff;
       --primary-container:#ffddb3;      --on-primary-container:#633f00;
       --secondary:#6f5b40;              --on-secondary:#ffffff;
@@ -50,8 +48,7 @@
       --elev-3:0 6px 16px rgba(0,0,0,.18), 0 2px 4px rgba(0,0,0,.10);
       --radius-xs:4px;
       --radius-full:999px;
-      /* תפקידים סמנטיים נוספים שאין ב-M3 הבסיסי. לכל אחד יש ערך נגדי
-         בבלוק הכהה שמתחת — זה מה שמאפשר להחליף ערכה בלי לגעת בכללים. */
+      /* תפקידים סמנטיים נוספים; לכל אחד ערך נגדי בבלוק הכהה */
       --info:#1d4ed8;                   --info-container:#dbeafe;
       --info-surface:#eef4ff;           --on-info-container:#1e3a8a;
       --info-container-high:#cfe4fd;
@@ -62,9 +59,7 @@
       --highlight:#fde047;              --on-highlight:#111827;
       --code-bg:#241f19;                --code-fg:#f2e9dd;
       --dot-idle:#d1d5db;
-      /* בלי ההצהרה הזאת הדפדפן מרנדר פקדים מקומיים, רשימות <option>,
-         פס גלילה וסמן טקסט בצבעי ברירת מחדל בהירים גם במצב כהה — ומכאן
-         טקסט שחור על רקע כהה. */
+      /* פקדים מקומיים ורשימות option בצבעי הערכה */
       color-scheme:light;
       --font-ui:"Segoe UI",Roboto,"Helvetica Neue",Arial,"Noto Sans Hebrew",sans-serif;
       --font-book:"Frank Ruhl Libre","FrankRuehl CLM","Taamey Frank CLM",David,
@@ -278,10 +273,7 @@
       align-items:center;
     }
 
-    /* ברירת מחדל אחת לכל פקדי הטקסט. כמה כללים ממוקדים קבעו רקע בלי צבע
-       טקסט (למשל .linkRow select), ואז צבע ברירת המחדל של הדפדפן נשאר שחור
-       ונבלע ברקע הכהה. הכלל הזה מוקדם בגיליון בכוונה, כדי שכללים ממוקדים
-       יוכלו לדרוס אותו. */
+    /* ברירת מחדל לפקדי טקסט; כללים ממוקדים דורסים */
     input[type="text"], input[type="number"], input[type="search"],
     select, textarea{
       background:var(--surface-container-lowest);
@@ -556,9 +548,7 @@
     }
 
 
-    /* ===== מצב כהה — דריסת תפקידים בלבד. כל הכינויים והכללים שמתחת
-       נגזרים מהם, ולכן אין צורך לשכפל אף כלל. הערכים זהים ל-OtzariaLinker,
-       שנגזרו מ-AppSurfaces של אוצריא (panelBackground כהה = שחור). ===== */
+    /* ===== מצב כהה — דריסת תפקידים בלבד (זהה ל-OtzariaLinker) ===== */
     :root[data-theme="dark"]{
       color-scheme:dark;
       --primary:#f4bd6f;                --on-primary:#452b00;
@@ -644,8 +634,7 @@
       box-shadow:var(--elev-1);
     }
     .themeToggle .ic{margin-inline-end:0}
-    /* האייקון מראה לאן הלחיצה תוביל, לא היכן אנחנו נמצאים:
-       במצב בהיר מוצג ירח, ובמצב כהה מוצגת שמש. */
+    /* האייקון מראה את המצב שאליו הלחיצה תעביר */
     :root:not([data-theme="dark"]) .themeToggle .iconSun{display:none}
     :root[data-theme="dark"] .themeToggle .iconMoon{display:none}
     @media (prefers-color-scheme: dark){
@@ -654,16 +643,13 @@
     }
     @media print{ .themeToggle{display:none} }
 
-    /* טבעת מיקוד. הכללים הממוקדים מבטלים outline ומחליפים אותו בצל חום
-       שקוף שיחס הניגודיות שלו כ-1.1:1 — כלומר בלתי נראה בשני המצבים.
-       הכלל הזה מגיע מ-OtzariaLinker ומשתמש ב---primary, שעובר בשניהם. */
+    /* טבעת מיקוד גלויה בשני המצבים */
     :focus-visible{
       outline:2px solid var(--primary);
       outline-offset:2px;
     }
 
-    /* אייקוני SVG מוטמעים (ספרייט של OtzariaLinker) — בלי פונט אייקונים
-       ובלי בקשת רשת, כדי שהעותק האופליין ייראה זהה. */
+    /* אייקוני SVG מוטמעים — בלי בקשת רשת */
     .ic{
       width:20px; height:20px; flex:0 0 auto;
       display:inline-block; vertical-align:-.22em;
@@ -1142,11 +1128,7 @@
 </head>
 
 <body>
-<!-- ספרייט אייקונים מוטמע, מקורו ב-Otzaria/OtzariaLinker (סגנון קווי, viewBox 24x24).
-     מוטמע בקובץ ולא נטען מהרשת, כדי שהעותק האופליין ייראה זהה. איסיו #2 ב-OtzariaLinker
-     נפתח בדיוק בגלל פונט אייקונים שלא נטען אופליין והציג את שם האייקון כטקסט.
-     להוספת אייקון: להעתיק את ה-symbol המתאים מ-OtzariaLinker, ולהשתמש בתגית
-     svg עם class="ic" שמכילה use שמצביע על מזהה ה-symbol. -->
+<!-- ספרייט אייקונים מוטמע מ-Otzaria/OtzariaLinker; שימוש: <svg class="ic"><use href="#ic-…"/></svg> -->
 <svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false"><defs>
   <symbol id="ic-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M2 12h2M20 12h2M4.9 4.9 6.3 6.3M17.7 17.7l1.4 1.4M19.1 4.9l-1.4 1.4M6.3 17.7l-1.4 1.4"/></symbol>
   <symbol id="ic-moon" viewBox="0 0 24 24"><path d="M20 13.5A8.5 8.5 0 0 1 10.5 4a8.5 8.5 0 1 0 9.5 9.5z"/></symbol>
@@ -1160,8 +1142,7 @@
   <symbol id="ic-settings" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 14.5a1.6 1.6 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.6 1.6 0 0 0-1.8-.3 1.6 1.6 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.2a1.6 1.6 0 0 0-1-1.5 1.6 1.6 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.6 1.6 0 0 0 .3-1.8 1.6 1.6 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.2a1.6 1.6 0 0 0 1.5-1 1.6 1.6 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.6 1.6 0 0 0 1.8.3H9a1.6 1.6 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.2a1.6 1.6 0 0 0 1 1.5 1.6 1.6 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.6 1.6 0 0 0-.3 1.8V9a1.6 1.6 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.2a1.6 1.6 0 0 0-1.4 1z"/></symbol>
   <symbol id="ic-tune" viewBox="0 0 24 24"><path d="M4 6h9M17 6h3M4 12h3M11 12h9M4 18h9M17 18h3"/><circle cx="15" cy="6" r="2"/><circle cx="9" cy="12" r="2"/><circle cx="15" cy="18" r="2"/></symbol>
   <symbol id="ic-target" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="3.2"/><path d="M12 2v2.5M12 19.5V22M2 12h2.5M19.5 12H22"/></symbol>
-  <!-- שמות "start"/"end" הם הכיוון הלוגי; הציור עצמו פיזי. ב-RTL:
-       start = שמאלה (לכיוון הסוף), end = ימינה (לכיוון ההתחלה). -->
+  <!-- start/end לוגיים; ב-RTL start = שמאלה -->
   <symbol id="ic-range" viewBox="0 0 24 24"><path d="M5 6h14M5 18h14"/><path d="M12 8.5v7"/><path d="m9.5 11 2.5-2.5 2.5 2.5M9.5 13l2.5 2.5 2.5-2.5"/></symbol>
   <symbol id="ic-word" viewBox="0 0 24 24"><path d="M4 6.5h16M4 17.5h16"/><rect x="7" y="10" width="10" height="4.5" rx="1.5" fill="currentColor" stroke="none" opacity=".25"/><rect x="7" y="10" width="10" height="4.5" rx="1.5"/></symbol>
   <symbol id="ic-clipboard" viewBox="0 0 24 24"><rect x="8" y="3" width="8" height="4" rx="1"/><path d="M8 5H6.5A1.5 1.5 0 0 0 5 6.5v13A1.5 1.5 0 0 0 6.5 21h11a1.5 1.5 0 0 0 1.5-1.5v-13A1.5 1.5 0 0 0 17.5 5H16"/></symbol>
@@ -1200,11 +1181,9 @@
           <li><b>בדקו את התוצאה.</b> אם משהו לא מדויק, פתחו את "עורך מתקדם" כדי לראות את הספר, ההערות והקישורים זה לצד זה, ולתקן במקום שצריך.</li>
           <li><b>הורידו את קובץ ה-JSON הסופי.</b> יש שתי דרכים להכניס אותו לאוצריא, והן לא שקולות:
             <ul>
-              <li><b>ייבוא בתוכנה</b> (הגדרות &gt; ספרייה &gt; ייבוא דורות וקישורים) — מיידי, אבל מקבל <b>ארבעה סוגי קישור בלבד</b>:
-                <span class="mono" dir="ltr">commentary</span>, <span class="mono" dir="ltr">targum</span>,
-                <span class="mono" dir="ltr">reference</span> ו-<span class="mono" dir="ltr">other</span>.
-                סוג אחר יפסיל את <b>כל</b> הקובץ, והייבוא הוא הכול-או-כלום.</li>
-              <li><b>הוספה לספריית אוצריא עצמה</b> (שליחת הקובץ לתיקיית <span class="mono" dir="ltr">links</span> שבמאגר הספרייה) — נכנס בבנייה הבאה של המסד, ותומך בכל 22 הסוגים, בעוגני-מילה, בטווחים ובמיזוג ההערות.</li>
+              <li><b>ייבוא בתוכנה</b> (הגדרות &gt; ספרייה &gt; ייבוא דורות וקישורים) — מיידי, תומך בכל הסוגים, בעוגני-מילה ובטווחים.
+                הייבוא הוא הכול-או-כלום: רשומה פגומה אחת תפסול את <b>כל</b> הקובץ. אין בו מיזוג "הערות על X".</li>
+              <li><b>הוספה לספריית אוצריא עצמה</b> (שליחת הקובץ לתיקיית <span class="mono" dir="ltr">links</span> שבמאגר הספרייה) — נכנס בבנייה הבאה של המסד, ותומך גם במיזוג ההערות.</li>
             </ul>
           </li>
         </ol>
@@ -1278,25 +1257,9 @@
                         <option value="footnotes">הערות שוליים (footnotes)</option>
                       </optgroup>
                       <optgroup label="סוגי קישור — יופיעו בפאנל הקישורים">
-                        <!--
-                        שמות חלופיים (aliases) שאינם נשמרים כסוג ConnectionType נפרד ב-DB
-                        אלא ממופים לסוג אחר. ביצירת קישורים חדשים בוחרים בסוג הקנוני.
-                        <option value="quotation_auto">ציטוט אוטומטי (quotation_auto)</option>
-                        <option value="quotation_auto_tanakh">ציטוט אוטומטי מהתנ״ך (quotation_auto_tanakh)</option>
-                        <option value="related passage">קטע קשור (related passage)</option>
-                        <option value="ein mishpat / ner mitsvah">עין משפט / נר מצווה</option>
-                        -->
-                        <!--
-                        linker הוסר: הגנרטור זורק כל רשומה כזו מקובץ קישורים ידני,
-                        לפני שנוצרת שורת link ובלי שום אזהרה. שכבת LINKER מיוצרת
-                        אך ורק ב-Phase-2 של LinkerToOtzaria, מ-sidecar בפורמט TSV.
-                        ראה Otzaria/SeforimLibrary, Generator.kt:2018:
-                            if (declaredType == ConnectionType.LINKER) continue
-                        <option value="linker">אוטומטי (linker)</option>
-                        -->
-                        <!-- התוויות העבריות כאן זהות לאלה שאוצריא מציגה בפועל
-                             (LinkTypes.hebrewLabels), כדי שמה שנבחר בתפריט יהיה
-                             מה שהמשתמש יראה אחר כך בפאנל. -->
+                        <!-- הושמטו כינויים שממופים לסוג אחר: quotation_auto*, related passage, ein mishpat / ner mitsvah -->
+                        <!-- linker הושמט: הגנרטור מדלג עליו בקובץ ידני -->
+                        <!-- התוויות זהות ל-LinkTypes.hebrewLabels -->
                         <option value="reference">עיון (reference)</option>
                         <option value="quotation">ציטוט (quotation)</option>
                         <option value="related">נושא קרוב (related)</option>
@@ -1309,18 +1272,13 @@
                         <option value="summary">סיכום (summary)</option>
                         <option value="sifrei_mitzvot">ספרי מצוות (sifrei mitzvot)</option>
                         <option value="essay">מאמר / חיבור (essay)</option>
-                        <!-- none וערך ריק ממופים שניהם ל-OTHER בגנרטור
-                             (ConnectionType.fromString: "", "none" -> OTHER),
-                             ולכן נותרה אפשרות קנונית אחת במקום שלוש זהות. -->
+                        <!-- none וערך ריק ממופים ל-other -->
                         <option value="other">לא מסווג (other)</option>
                       </optgroup>
                     </select>
                   </div>
                   <div class="hint" style="margin-top:6px">
                     בחירה האם ההערות יוצגו בפנאל המפרשים או בפנאל הקישורים.
-                    הייבוא שבתוך התוכנה מקבל רק <span class="mono" dir="ltr">commentary</span>,
-                    <span class="mono" dir="ltr">targum</span>, <span class="mono" dir="ltr">reference</span>
-                    ו-<span class="mono" dir="ltr">other</span>; שאר הסוגים עובדים רק דרך בניית המסד.
                   </div>
                 </div>
 
@@ -1502,10 +1460,7 @@
   */
 
   /* חלק 1: אלמנטים קבועים מהממשק ומצב הריצה */
-  /* ערכת נושא: "light" / "dark" מפורשים, או null = לפי העדפת המערכת.
-     נשמר ב-localStorage ולכן שורד גם בעותק האופליין המורד. גישה ל-
-     localStorage עטופה ב-try/catch כי בחלון פרטי או מקובץ file:// היא
-     עלולה לזרוק, ואסור שזה יעצור את אתחול הדף. */
+  /* ערכת נושא: "light" / "dark", או null = לפי המערכת; localStorage עלול לזרוק */
   const THEME_KEY = "linkNotes.theme";
 
   function readStoredTheme() {
@@ -1639,8 +1594,7 @@
   })();
 
   /* חלק 2: פונקציות עזר כלליות לממשק ולטקסט */
-  /* החלפת תווית של כפתור נושא-אייקון. textContent על הכפתור עצמו היה מוחק
-     את תגית ה-svg הפנימית — באג שנולד כשהאימוג'ים הוחלפו בספרייט. */
+  /* החלפת תווית בלי למחוק את אייקון ה-svg */
   function buttonLabel(btn) {
     const span = btn && btn.querySelector(".btnLabel");
     return span ? span.textContent : (btn ? btn.textContent : "");
@@ -1766,11 +1720,7 @@
     return out;
   }
 
-  /* FileReader.readAsText מסיר BOM של UTF-8 בשקט (אלגוריתם הפענוח של
-     WHATWG), ולכן האופסטים שהכלי מחשב הם על טקסט בלי BOM. הגנרטור, לעומת
-     זאת, קורא עם Charsets.UTF_8 ש*אינו* מסיר BOM, ו-countVisibleChars סופר
-     אותו כתו נראה לכל דבר. התוצאה: עוגן בשורה הראשונה של קובץ עם BOM יוסט
-     בתו אחד. כאן רק מזהים את המצב כדי להזהיר. */
+  /* הגנרטור סופר BOM כתו, ו-FileReader מסיר אותו — לכן מזהים אותו כאן */
   function fileStartsWithBom(file) {
     return new Promise(resolve => {
       try {
@@ -1807,6 +1757,8 @@
   function safeFileStem(name) {
     let stem = String(name || "").trim();
     stem = stem.replace(/\.[^/.\\]+$/g, "");
+    // גרשיים לעברית ולא מחיקה — אחרת השם לא יתאים לכותרת במסד
+    stem = toHebrewQuotes(stem);
     stem = stem.replace(/[<>:"/\\|?*\u0000-\u001F]/g, "");
     stem = stem.replace(/\s+/g, " ").trim();
     return stem || "שם הספר";
@@ -1965,12 +1917,7 @@
 
     if (!Number.isFinite(num)) return null;
 
-    /* המפתח נושא את המספר ואת הכוכביות בלבד. הכוכבית היא חלק מזהות הסימון
-       ("סג*" ≠ "סג") ולכן חייבת להישמר, אבל כל שאר הפיסוק הוא עיטור שכל צד
-       עשוי לכתוב אחרת: הספר מסמן <sup>1</sup> ואילו קובץ ההערות פותח את אותה
-       הערה עצמה ב-"1)" או ב-"1.". מפתח שנושא את העיטור לא היה מתאים בין שני
-       הצדדים, והקובץ כולו היה יוצא בלי אף קישור. prefix/suffix הגולמיים
-       נשמרים כמות שהם עבור דוח הכפילויות. */
+    /* המפתח = מספר + כוכביות; שאר הפיסוק הוא עיטור שכל צד כותב אחרת */
     const stars = s => "*".repeat((String(s).match(/\*/g) || []).length);
     const key = `${stars(prefix)}${num}${stars(suffix)}`;
     const hasDecoration = (prefix + suffix).length > 0;
@@ -1985,8 +1932,7 @@
     };
   }
 
-  /* מפתח "מספרי פשוט" = מספר בלי כוכבית. normalizeRefToken כבר מסלק כל עיטור
-     אחר מהמפתח, ולכן די בבדיקה המחמירה: "1*" נפסל, "1" עובר. */
+  /* מספר בלי כוכבית */
   function isPlainNumericKey(key) {
     return /^\d+$/.test(String(key || ""));
   }
@@ -2010,13 +1956,7 @@
       const rawInside = closeMatch ? tail.slice(0, closeMatch.index) : tail.slice(0, 220);
       const insidePlain = rawInside.replace(/<[^>]*>/g, " ").trim();
 
-      /* הכמתים כאן חייבים להיות חמדניים (greedy) ולא עצלים (*?).
-         עם כמתים עצלים "(סג*)" נקטע ל-"(סג" — הכוכבית נבלעת, ולכן
-         "(סג*)" ו-"(סג)" מקבלים בדיוק אותו מפתח, וההערה עם הכוכבית לא מקושרת.
-         בנוסף, המפתח יצא "(63" (עם עיטור) במקום "63", ולכן גם isPlainNumericKey
-         נכשל ואיתור איפוס-המספור בין פרקים מפסיק לעבוד.
-         חמדנות כאן בטוחה: מחלקות התווים מדירות רווחים, אותיות, ספרות ו-<>,
-         כך שההרחבה חסומה בגבולות האסימון וסופגת רק פיסוק/כוכביות שצמודות למספר. */
+      /* כמתים חמדניים, כדי שהכוכבית תישאר במפתח */
       const tokenMatch = insidePlain.match(/([^0-9א-תךםןףץ\s<>\u200e\u200f\u202a-\u202e]*(?:\d+|[א-תךםןףץ"'״׳\u05F3\u05F4-]+)[^0-9א-תךםןףץ\s<>\u200e\u200f\u202a-\u202e]*)/);
       if (tokenMatch && tokenMatch[1]) {
         const ref = normalizeRefToken(tokenMatch[1]);
@@ -2198,8 +2138,7 @@
       prev &&
       !(prev.num === 1 && isPlainNumericKey(prev.key))
     ) {
-      /* השוואה לפי num ולא לפי מחרוזת המפתח: מפתח מעוטר ("(2)", "2.") אינו
-         שווה ל-"2", וההשוואה הקשיחה הישנה הייתה מחמיצה אותו. */
+      /* השוואה לפי num, כי המפתח עשוי להיות מעוטר */
       const future =[next1, next2, next3].filter(Boolean);
       const hasPlain2 = future.some(o => o.num === 2 && isPlainNumericKey(o.key));
       const hasPlain3 = future.some(o => o.num === 3 && isPlainNumericKey(o.key));
@@ -2505,12 +2444,7 @@
     );
   }
 
-  /* שם קובץ הערות בתבנית "הערות על X" (למעט "הערות על חברותא") מפעיל
-     באוצריא מסלול מיוחד: HearotCompanionMerge. הגנרטור קורא את קובץ
-     הקישורים הזה, ולפיו מזריק כל שורת הערה אל תוך שורת הבסיס המתאימה
-     כהערת שוליים מוטמעת (<sup class="footnote-marker"> + <i class="footnote">).
-     הקישורים אינם נזרקים אלא משמשים כמפת המיזוג, ולכן אין כאן בעיה —
-     אבל יש תנאים שמבטלים את המיזוג, והם מה ששווה לבדוק. */
+  /* "הערות על X" (למעט חברותא) מתמזג בגנרטור לתוך ספר הבסיס */
   const MERGED_COMPANION_PREFIX = "הערות על ";
   const MERGED_COMPANION_EXCEPTION = "הערות על חברותא";
 
@@ -2522,11 +2456,7 @@
     return (dot > 0 ? last.slice(0, dot) : last).trim();
   }
 
-  /* הגנרטור מנרמל כותרות ספרים דרך normalizeHebrewLabel: גרשיים ASCII
-     הופכים ל-״ וגרש בודד ל-׳, והמפה booksByTitle ממופתחת בערך המנורמל.
-     אבל חיפוש ספר המקור נעשה על שם הקובץ הגולמי
-     (Generator.kt:1837 ואז 1952), ו-path_2 נפתר גם הוא גולמית.
-     לכן שם עם גרשיים ASCII פשוט לא יימצא, וכל הקובץ יחזיר 0 קישורים. */
+  /* הגנרטור מחפש ספר לפי השם הגולמי, אבל הכותרות במסד מנורמלות ל-״ ו-׳ */
   function hasAsciiQuotes(title) {
     return /["'`]/.test(String(title || ""));
   }
@@ -2540,31 +2470,13 @@
     return t.startsWith(MERGED_COMPANION_PREFIX) && !t.startsWith(MERGED_COMPANION_EXCEPTION);
   }
 
-  /* מסלול הייבוא בתוכנה (user_content_import) מאמת סוגים מול
-     kHebrewConnectionTypes — חמישה ערכים בלבד, שמתוכם ארבעה מופיעים בתפריט
-     כאן. וחשוב מכך, הייבוא אטומי: user_content_importer.dart:178-180 עושה
-     "if (errors.isNotEmpty) return" לפני כל כתיבה, כלומר שורה אחת עם סוג
-     לא מוכר מפילה את ייבוא כל הקובץ. */
-  const IMPORT_SAFE_TYPES = new Set(["commentary", "targum", "reference", "other"]);
-
-  function isImportSafeType(connectionType) {
-    return IMPORT_SAFE_TYPES.has(
-      String(connectionType || "").trim().toLowerCase().replace(/\s+/g, "_")
-    );
-  }
-
-  /* האם יזוהו סמני הערה מודפסים בגוף הספר, כך שריחוף עליהם יפתח חלונית.
-     numbered_note_markers.dart דורש סוג תלוי-טקסט, וגם FOOTNOTES או כותרת
-     יעד שמתחילה ב"הערות". */
+  /* האם סמני הערה מודפסים יקבלו חלונית (numbered_note_markers.dart) */
   function supportsPrintedNoteMarkers(connectionType, notesTitle) {
     const type = String(connectionType || "").trim().toLowerCase().replace(/\s+/g, "_");
     return type === "footnotes" || String(notesTitle || "").startsWith("הערות");
   }
 
-  /* ולידציה של הרשומות לפני הייצוא. הגנרטור מפענח את הקובץ כמערך אחד
-     (decodeFromString<List<LinkData>>), וארבעת השדות מוגדרים שם ללא ברירת
-     מחדל — ולכן רשומה פגומה אחת מפילה את פענוח הקובץ כולו ומחזירה רשימה
-     ריקה עם אזהרה יחידה. עדיף לתפוס את זה כאן. */
+  /* רשומה פגומה אחת מפילה את פענוח הקובץ כולו */
   function validateLinksForExport(links, bookLineCount, noteLineCount) {
     const problems = [];
     const add = (i, msg) => {
@@ -2588,8 +2500,7 @@
       if (typeof link["Conection Type"] !== "string") {
         add(i, "Conection Type אינו מחרוזת");
       }
-      /* אינדקס שחורג מאורך הקובץ נבלע בגנרטור: getLineIdCached מחזיר null
-         ואז continue, בלי אף שורת לוג. עדיף לתפוס כאן. */
+      /* אינדקס מחוץ לקובץ נזרק בגנרטור בשקט */
       if (Number.isInteger(bookLineCount) && link["line_index_1"] > bookLineCount) {
         add(i, `line_index_1 (${link["line_index_1"]}) חורג ממספר השורות בספר (${bookLineCount})`);
       }
@@ -2600,7 +2511,7 @@
       const s = link.start, e = link.end;
       if (s !== undefined || e !== undefined) {
         if (!Number.isInteger(s) || s < 0) add(i, "start אינו מספר שלם אי-שלילי");
-        else if (!Number.isInteger(e) || e <= s) add(i, "end חייב להיות מספר שלם גדול מ-start");
+        else if (e !== undefined && (!Number.isInteger(e) || e <= s)) add(i, "end חייב להיות מספר שלם גדול מ-start");
       }
       const e1 = link["line_index_1_end"], e2 = link["line_index_2_end"];
       if (e1 !== undefined && (!isPosInt(e1) || e1 < link["line_index_1"])) {
@@ -2634,22 +2545,23 @@
     });
   }
 
-  function reportGeneratorCompatibility({ path2, connectionType, outCount, linkGenerationMode, links, noteLines, bookBaseName, bookHasBom }) {
+  function reportGeneratorCompatibility({ path2, connectionType, outCount, linkGenerationMode, links, noteLines, bookHasBom }) {
     if (!outCount) return;
     const notesTitle = notesTitleFromPath(path2);
+    // מצטברות לסטטוס אחד, בלי לדרוס את סיכום הקישורים
+    const notices = [];
+    const notice = (text, cls) => notices.push({ text, cls });
 
-    /* גרשיים ASCII בשם הספר או בשם קובץ ההערות */
-    const quoted = [
-      hasAsciiQuotes(bookBaseName) ? `שם הספר "${bookBaseName}" → "${toHebrewQuotes(bookBaseName)}"` : null,
-      hasAsciiQuotes(notesTitle) ? `שם קובץ ההערות "${notesTitle}" → "${toHebrewQuotes(notesTitle)}"` : null
-    ].filter(Boolean);
+    /* גרשיים ASCII בשם קובץ ההערות (שם הספר מומר ב-safeFileStem) */
+    const quoted = hasAsciiQuotes(notesTitle)
+      ? [`שם קובץ ההערות "${notesTitle}" → "${toHebrewQuotes(notesTitle)}"`]
+      : [];
     if (quoted.length) {
-      setStatus(
-        els.makeStatus,
+      notice(
         `אזהרה: יש גרשיים רגילים בשם. אוצריא מנרמלת כותרות ל-״ ו-׳, אבל מחפשת את הספר לפי השם הגולמי — ולכן ייתכן שלא תמצא אותו וכל הקישורים יאבדו. ${quoted.join("; ")}`,
         "err"
       );
-      logger.err("גרשיים ASCII בשם הספר או בקובץ ההערות.", {
+      logger.err("גרשיים ASCII בשם קובץ ההערות.", {
         הכלל: 'normalizeHebrewLabel ממיר " ל-״ ו-\' ל-׳, אך חיפוש הספר נעשה על השם הגולמי',
         התוצאה: '"Source book not found for links" — הקובץ כולו מחזיר 0 קישורים',
         הפתרון: quoted
@@ -2657,8 +2569,7 @@
     }
 
     if (isMergedCompanionTitle(notesTitle)) {
-      /* התנאים שמבטלים את המיזוג, לפי סדר הבדיקה בגנרטור. רק אלה שהכלי
-         יכול לדעת עליהם מתוך מה שנוצר כאן. */
+      /* התנאים שמבטלים את המיזוג בגנרטור, ככל שהכלי יודע עליהם */
       const blockers = [];
       if (linkGenerationMode === "range") blockers.push("נבחר מצב קישור-טווח (ranged companion links)");
       if (linkGenerationMode === "anchor") blockers.push("נבחר מצב מילה↔שורה (word-anchored links)");
@@ -2676,14 +2587,12 @@
         );
       }
 
-      const badNote = noteLines.find((line, i) =>
-        linkedNoteLines.has(i + 1) && /<i>|<i\s|<\/i>/i.test(String(line || ""))
-      );
-      if (badNote !== undefined) blockers.push("שורת הערה מקושרת מכילה תגית <i>");
+      const linkedText = [...linkedNoteLines].map(n => String(noteLines[n - 1] ?? ""));
+      if (linkedText.some(t => /<i>|<i\s|<\/i>/i.test(t))) blockers.push("שורת הערה מקושרת מכילה תגית <i>");
+      if (linkedText.some(t => !t.trim())) blockers.push("קישור לשורת הערה ריקה");
+      if (linkedText.some(t => /^\uFEFF?<h[1-6]/i.test(t))) blockers.push("קישור לשורת כותרת בקובץ ההערות");
 
-      /* כותרות שאינן מקושרות אינן נספרות כ"שורה לא מקושרת" ולכן אינן מונעות
-         את המיזוג — אבל ספר ההערות מדוכא מייבוא, והטקסט שלהן לא מוזרק לשום
-         מקום. התוצאה היא אובדן שקט של כותרות הפרקים בקובץ ההערות. */
+      /* כותרות לא מקושרות אובדות במיזוג */
       const lostHeadings = noteLines.reduce((acc, line, i) => {
         const text = String(line || "");
         if (!/^\uFEFF?<h[1-6]/i.test(text)) return acc;
@@ -2691,8 +2600,7 @@
       }, 0);
 
       if (blockers.length) {
-        setStatus(
-          els.makeStatus,
+        notice(
           `שם קובץ ההערות "${notesTitle}" מפעיל באוצריא מיזוג להערות שוליים מוטמעות, אבל המיזוג לא יתבצע: ${blockers.join("; ")}. ההערות יישארו ספר נפרד והקישורים יעבדו כרגיל.`,
           "warn"
         );
@@ -2710,8 +2618,7 @@
           }
         );
         if (lostHeadings > 0) {
-          setStatus(
-            els.makeStatus,
+          notice(
             `שימו לב: ${lostHeadings} שורות כותרת בקובץ ההערות אינן מקושרות. במיזוג הן אינן מוזרקות לשום מקום וספר ההערות אינו מיובא — הטקסט שלהן יאבד.`,
             "warn"
           );
@@ -2727,8 +2634,7 @@
     if (bookHasBom && linkGenerationMode === "anchor") {
       const onFirstLine = links.filter(l => l["line_index_1"] === 1 && l.start !== undefined).length;
       if (onFirstLine > 0) {
-        setStatus(
-          els.makeStatus,
+        notice(
           `שימו לב: קובץ הספר מתחיל ב-BOM, ו-${onFirstLine} עוגנים יושבים בשורה הראשונה. אוצריא סופרת את ה-BOM כתו, ולכן העוגנים האלה יוסטו בתו אחד. כדאי לשמור את קובץ הספר בלי BOM.`,
           "warn"
         );
@@ -2738,17 +2644,6 @@
           הפתרון: "שמירת קובץ הספר בקידוד UTF-8 ללא BOM"
         });
       }
-    }
-
-    if (!isImportSafeType(connectionType)) {
-      logger.warn(
-        `הסוג "${connectionType || "(ריק)"}" אינו נתמך בייבוא שבתוך התוכנה.`,
-        {
-          הסיבה: "מסלול הייבוא מכיר רק פירוש/תרגום/הפניה/מקור/אחר, והוא אטומי — שורה אחת פוסלת את כל הקובץ",
-          נתמכים_בייבוא: "commentary, targum, reference, other",
-          המסלול_שכן_תומך: "הוספת הקובץ לתיקיית links שבמאגר הספרייה, שנכנסת בבניית המסד"
-        }
-      );
     }
 
     if (supportsPrintedNoteMarkers(connectionType, notesTitle)) {
@@ -2763,6 +2658,12 @@
           הסוג_שנבחר: connectionType || "(ריק)"
         }
       );
+    }
+
+    if (notices.length) {
+      const prev = els.makeStatus.querySelector("span:last-child")?.textContent || "";
+      const isErr = els.makeStatus.classList.contains("err") || notices.some(n => n.cls === "err");
+      setStatus(els.makeStatus, [prev, ...notices.map(n => n.text)].filter(Boolean).join(" · "), isErr ? "err" : "warn");
     }
   }
 
@@ -2963,7 +2864,7 @@
     try {
       state.notesText = await readFileAsText(f);
       state.notesFileName = f.name;
-      els.path2.value = f.name;
+      els.path2.value = toHebrewQuotes(f.name);
 
       setStatus(els.notesStatus, `הערות: נטען (${f.name})`, "ok");
       showToast("קובץ ההערות נטען");
@@ -3033,7 +2934,7 @@
     els.heRef2.value = heRef2;
 
     let path2 = String(els.path2.value || "").trim();
-    if (!path2 && state.notesFileName) path2 = state.notesFileName;
+    if (!path2 && state.notesFileName) path2 = toHebrewQuotes(state.notesFileName);
     els.path2.value = path2;
 
     const connectionType = els.connectionTypeSelect.value;
@@ -3194,7 +3095,6 @@
         linkGenerationMode,
         links: exportArr,
         noteLines,
-        bookBaseName: state.bookBaseName,
         bookHasBom: state.bookHasBom
       });
     }
@@ -3729,7 +3629,7 @@
   function createLink(lineIndex1, lineIndex2) {
     const heRef2 = String(els.heRef2.value || "").trim() || "הערות";
     let path2 = String(els.path2.value || "").trim();
-    if (!path2 && state.notesFileName) path2 = state.notesFileName;
+    if (!path2 && state.notesFileName) path2 = toHebrewQuotes(state.notesFileName);
 
     const link = {
       _id: state.editor.nextId++,
@@ -3788,7 +3688,7 @@
 
     const heRef2 = String(els.heRef2.value || "").trim() || "הערות";
     let path2 = String(els.path2.value || "").trim();
-    if (!path2 && state.notesFileName) path2 = state.notesFileName;
+    if (!path2 && state.notesFileName) path2 = toHebrewQuotes(state.notesFileName);
 
     const link = {
       _id: state.editor.nextId++,
@@ -3843,9 +3743,7 @@
     els.btnDownload.disabled = cleanArr.length === 0;
     els.btnCopy.disabled = cleanArr.length === 0;
 
-    /* עריכה ידנית יכולה לייצר שורה חסרה או אינדקס לא חוקי, ורשומה פגומה אחת
-       מפילה את פענוח הקובץ כולו באוצריא. לכן מריצים את אותה ולידציה שרצה
-       אחרי היצירה האוטומטית, ולא מסתפקים בזו שרצה פעם אחת. */
+    /* ולידציה גם אחרי עריכה ידנית */
     state.exportProblems = validateLinksForExport(
       cleanArr,
       state.editor.bookLines ? state.editor.bookLines.length : null,
@@ -3894,8 +3792,7 @@
 
     try {
       setEditorVisible(true);
-      /* העורך נפתח הרחק מתחת לכפתור, ובלי גלילה נראה היה כאילו הלחיצה לא
-         עשתה כלום. scrollIntoView נקרא אחרי הרינדור כדי שהגובה כבר סופי. */
+      /* גלילה אחרי הרינדור, כשהגובה כבר סופי */
       els.advEditor.scrollIntoView({ block: "start", behavior: "smooth" });
     } finally {
       if (els.advEditor.style.display === "none") setButtonLabel(els.btnAdvancedEditor, originalLabel);
@@ -4005,14 +3902,10 @@
     const footerNote = clone.querySelector(".footerNote");
     if (footerNote) footerNote.remove();
 
-    /* לא מקבעים את ערכת הנושא הנוכחית בעותק: הסקריפט קובע אותה מחדש בטעינה
-       לפי localStorage או העדפת המערכת, ותכונה מקובעת הייתה רק גורמת להבהוב
-       של ערכה אחת לפני שהאחרת נכנסת. */
+    /* בלי ערכה מקובעת — הסקריפט קובע אותה בטעינה */
     clone.removeAttribute("data-theme");
 
-    /* העותק חייב לעבוד בלי רשת. גיליון הפונט של Google חוסם רינדור, ובלי
-       חיבור הדפדפן ממתין לטיים-אאוט לפני הציור. שרשרת ה-fallback ב-
-       --font-book מכסה את הכותרות. */
+    /* העותק האופליין בלי פונטים מהרשת */
     clone.querySelectorAll('link[href*="fonts.googleapis.com"], link[href*="fonts.gstatic.com"]')
       .forEach(node => node.remove());
 
